@@ -1,9 +1,5 @@
 from sqlmodel import SQLModel, Field
 
-# modelos para la db 
-
-# tablas
-
 class Cliente(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     nombre: str
@@ -20,7 +16,6 @@ class PaqueteTurístico(SQLModel, table=True):
     cupo: int
     estado: str   
     
-    
 class Destino(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     Ciudad: str
@@ -29,7 +24,6 @@ class Destino(SQLModel, table=True):
     clima: str 
     observaciones: str 
 
-        
 class Reserva(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     fecha: str
@@ -38,9 +32,6 @@ class Reserva(SQLModel, table=True):
     monto: float
     comentarios: str
     
-    
-
-# Pago: Registro de liquidación del paquete o abonos.
 class Pago(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     fecha: str
