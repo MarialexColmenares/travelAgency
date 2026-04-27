@@ -25,7 +25,6 @@ CREATE TABLE destino(
     observaciones VARCHAR(50)
 );
 
-
 CREATE TABLE Reserva(
     id SERIAL PRIMARY KEY,
     fecha DATE,
@@ -34,7 +33,7 @@ CREATE TABLE Reserva(
     monto NUMERIC(10, 2),
     comentarios VARCHAR(50)
 );
-    
+
 CREATE TABLE Pago(
     id SERIAL PRIMARY KEY,
     fecha DATE,
@@ -42,7 +41,7 @@ CREATE TABLE Pago(
     método_pago VARCHAR(50),
     estado VARCHAR(50)
 );
-    
+
 CREATE TABLE PersonaGuia(
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(50),
@@ -50,8 +49,7 @@ CREATE TABLE PersonaGuia(
     experiencia VARCHAR(50),
     disponibilidad date
 );
-	
-    
+
 CREATE TABLE Transporte(
     id SERIAL PRIMARY KEY,
     tipo VARCHAR(50),
@@ -65,8 +63,3 @@ CREATE TABLE Hotel
     categoria VARCHAR(50),
     direccion VARCHAR(50),
     contactoVARCHAR(50);
-    
-
-
-
-	

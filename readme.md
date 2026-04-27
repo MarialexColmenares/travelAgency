@@ -1,65 +1,84 @@
-# ✈️ Sistema de Agencia de Viajes (CRUD I)
+# ✈️ Sistema de Gestión - Agencia de Viajes
 
-Implementación de endpoints fundamentales y configuración inicial del proyecto utilizando **FastAPI** y **SQLModel / SQLAlchemy**. Este sistema permite la gestión de servicios turísticos mediante la creación y consulta de datos.
-
-## 🎯 Objetivos
-
-- Implementar endpoints **GET** y **POST** funcionales.
-- Configurar la conexión base a una base de datos Postgres (Engine y Session).
-- Estructurar el desarrollo de un miniproyecto escalable y organizado.
+Este proyecto es una **API** desarrollada con **FastAPI** para la gestión integral de una agencia de viajes. Permite administrar catálogos de servicios (hoteles, guías, transportes), diseñar paquetes turísticos dinámicos y gestionar el ciclo de vida de reservas y pagos.
 
 ---
 
 ## 📂 Estructura del Proyecto
 
-Jerarquía de archivos dentro del directorio `/mini_proyecto`:
-
-```text
-/mini_proyecto
-├── database.py        # Punto de entrada de la aplicación y rutas
-├── main.py            # Configuración de la conexión (Engine y Session)
-├── models.py          # Modelos de la base de datos (SQLModel)
-├── requirements.txt   # Listado de librerías necesarias
-└── env/               # Entorno virtual
-```
-
-# 🛠️ Configuración del Entorno
-
-1. Creación del entorno virtual
+Basado en una arquitectura modular para facilitar la escalabilidad:
 
 ```
+/TRAVELAGENCY
+├── agencia_de_viajes/     # Directorio principal del código
+│   ├── env/               # Entorno virtual
+│   ├── routers/           # Módulos de rutas (Clientes, Reservas, etc.)
+│   ├── conexion.py        # Configuración de base de datos (Engine/Session)
+│   ├── main.py            # Punto de entrada y registro de routers
+│   ├── models.py          # Definición de entidades (SQLModel)
+│   └── schemas.py         # Modelos de validación (Pydantic)
+├── requirements.txt       # Dependencias del proyecto
+└── readme.md              # Documentación
+```
+
+# 🛠️ Stack Tecnológico
+
+- Framework: FastAPI
+
+- ORM: SQLModel (basado en SQLAlchemy y Pydantic)
+
+- Base de Datos: PostgreSQL
+
+- Servidor ASGI: Uvicorn
+
+# 🗺️ Modelo de Negocio (Lógica de Datos)
+
+El sistema se divide en cuatro capas lógicas según los modelos implementados:
+
+- Catálogos de Servicio: Gestión de Destinos, Guías, Transportes y Hoteles.
+
+- Producto (Paquetes): El PaqueteTuristico actúa como núcleo, vinculando servicios y múltiples destinos mediante una tabla intermedia (PaqueteDestinoLink).
+
+- Clientes: Registro y control de usuarios activos.
+
+- Transacciones: Flujo de Reservas vinculadas a clientes y paquetes, con seguimiento detallado de Pagos.
+
+# 🚀 Instalación y Uso
+
+- Clonar el repositorio y entrar al directorio:
+
+```
+Bash
+
+cd TRAVELAGENCY/agencia_de_viajes
+```
+
+- Configurar el entorno virtual:
+
+```
+Bash
 python -m venv env
-
+source env/Scripts/activate  # En Windows: env\Scripts\activate
 ```
 
-2. Instalación de librerías
+- Instalar dependencias:
 
 ```
-pip install -r requirements.txt
+Bash
+pip install -r ../requirements.txt
 ```
 
-# 🏗️ Modelado de Datos (Entidades)
+- Ejecutar la aplicación:
 
-El sistema integra las siguientes entidades para el funcionamiento de la agencia:
+```
+Bash
+uvicorn main:app --reload
+```
 
-- 👤 Cliente: Datos personales, pasaporte o documento, teléfono y correo.
+- 📖 Documentación Interactiva
 
->> ¿ se puedes agregar entidades que crea necesarias ? 
+Una vez iniciado el servidor, puedes acceder a la documentación automática en:
 
-aqui agregaria: nombre
+- Swagger UI: http://127.0.0.1:8000/docs
 
-- 📦 Paquete Turístico: Nombre, descripción, duración, precio, cupo y estado.
-
->> tengo dudas sobre los tipos de datos en duracion, cupo y estado
-
-- 📍 Destino: Ciudad, país, descripción, clima y observaciones.
-
-- 📅 Reserva: Fecha, cantidad de personas, estado, monto y comentarios.
-
-- 💳 Pago: Registro de liquidación del paquete o abonos.
-
-- 🚩 Guía: Nombre, idiomas, experiencia y disponibilidad.
-
-- 🚌 Transporte: Tipo de transporte, empresa y capacidad.
-
-- 🏨 Hotel: Nombre, categoría, dirección y contacto. 
+- ReDoc: http://127.0.0.1:8000/redoc
