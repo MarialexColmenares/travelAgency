@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
-from schemas import ClienteCreate, clienteUpdate
+from agencia_de_viajes.esquemas.schemas import ClienteCreate, clienteUpdate
 from sqlmodel import Session, select
-from conexion import get_db
-from models import Cliente, Guia, Reserva
+from agencia_de_viajes.database.conexion import get_db
+from agencia_de_viajes.modelos.models import Cliente, Guia, Reserva
 
 # Definición del router para agrupar las rutas de 'Clientes' en la documentación (Swagger)
 router = APIRouter(prefix="/clientes", tags=["Clientes"])

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
-from conexion import get_db
-from models import Reserva, Transporte
-from schemas import ReservaCreate, ReservaUpdate
+from agencia_de_viajes.database.conexion import get_db
+from agencia_de_viajes.modelos.models import Reserva, Transporte
+from agencia_de_viajes.esquemas.schemas import ReservaCreate, ReservaUpdate
 
 router = APIRouter(prefix="/reservas", tags=["Reservas"])
 

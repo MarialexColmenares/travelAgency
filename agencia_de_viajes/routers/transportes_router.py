@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
-from models import Transporte
-from conexion import get_db
-from schemas import TransporteCreate, TransporteUpdate
+from agencia_de_viajes.modelos.models import Transporte
+from agencia_de_viajes.database.conexion import get_db
+from agencia_de_viajes.esquemas.schemas import TransporteCreate, TransporteUpdate
 
 router = APIRouter(prefix="/transportes", tags=["Transporte"])
 
