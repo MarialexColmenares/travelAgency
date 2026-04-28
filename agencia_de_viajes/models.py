@@ -7,7 +7,7 @@ class PaqueteDestinoLink(SQLModel, table=True):
     """ Tabla intermedia para conectar paquetes con múltiples destinos """
     paquete_id: Optional[int] = Field(default=None, foreign_key="paqueteturistico.id", primary_key=True)
     destino_id: Optional[int] = Field(default=None, foreign_key="destino.id", primary_key=True)
-
+    
 # 2. ENTIDADES DE SERVICIOS (CATÁLOGOS)
 class Destino(SQLModel, table=True):
     """ Lugares disponibles para visitar """

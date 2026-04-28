@@ -44,6 +44,22 @@ def crear_transporte(
 
     return nuevo_Transporte
 
+
+@router.post("/bulk")
+def crear_transportes(
+    transportes_data: list[TransporteCreate],
+    session: Session = Depends(get_db)
+):
+    nuevos_transportes = [Transporte(**transporte.model_dump()) for transporte in transportes_data]
+    session.add_all(nuevos_transportes)
+    session.commit()
+
+    for transporte in nuevos_transportes:
+        session.refresh(transporte)
+
+    return nuevos_transportes
+
+
 # --- PATCH ACTUALIZACION PARCIAL ---
 
 @router.patch("actualizar")

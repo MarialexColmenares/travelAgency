@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from conexion import get_db
-from models import Reserva
+from models import Reserva, Transporte
 from schemas import ReservaCreate, ReservaUpdate
 
 router = APIRouter(prefix="/reservas", tags=["Reservas"])
@@ -49,6 +49,22 @@ def crear_reserva(
     session.refresh(nueva_reserva)
 
     return nueva_reserva
+
+# --- POST BULK: CREAR MUCHAS NUEVAS RESERVAS---
+@router.post("/bulk")
+def crear_reservas(
+    reservas_data: list[ReservaCreate],
+    session: Session = Depends(get_db)
+):
+    nuevas_reservas = [Reserva(**reserva.model_dump()) for reserva in reservas_data]
+    session.add_all(nuevas_reservas)
+    session.commit()
+
+    for reserva in nuevas_reservas:
+        session.refresh(reserva)
+
+    return nuevas_reservas
+
 
 # --- PATCH: ACTUALIZACION PARCIAL---
 @router.patch("/{reserva_id}")

@@ -40,6 +40,23 @@ def crear_pago (
 
     return nuevo_pago
 
+# --- POST BULK: CREAR MUCHOS NUEVOS PAGOS---
+@router.post("/bulk") 
+def crear_pagos_masivo(
+    lista_data: list[PagoCreate],
+    session: Session = Depends(get_db)
+):
+
+    nuevos_pagos = [Pago(**pago.model_dump()) for pago in lista_data]
+
+    session.add_all(nuevos_pagos)
+    session.commit()
+
+    for pago in nuevos_pagos:
+        session.refresh(pago)
+
+    return nuevos_pagos
+
 # --- PATCH: ACTUALIZACION PARCIAL ---
 @router.patch("/{id_pago}")
 def actualizar_pago_parcial(

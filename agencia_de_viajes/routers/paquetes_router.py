@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends,HTTPException
 from sqlmodel import Session, select
 from conexion import get_db
 from schemas import PaqueteCreate, PaqueteUpdate
-from models import PaqueteTuristico
+from models import PaqueteDestinoLink, PaqueteTuristico
 
 router = APIRouter(prefix="/paquetes", tags=["Paquetes_Turisticos"])
 
@@ -50,6 +50,40 @@ def crear_paquete_turistico(
 
     return nuevo_paquete
 
+# --- POST BULK: CREAR MUCHOS NUEVOS PAQUETES---
+@router.post("/bulk")
+def crear_paquetes_con_destinos_masivo(
+    lista_data: list[PaqueteCreate],
+    session: Session = Depends(get_db)
+):
+    nuevos_paquetes_creados = []
+
+    for data in lista_data:
+        # 1. Extraer los IDs de destinos y limpiar los datos para el modelo Paquete
+        destinos_ids = data.destinos_ids
+        datos_paquete = data.model_dump(exclude={"destinos_ids"})
+        
+        # 2. Crear la instancia del Paquete
+        nuevo_paquete = PaqueteTuristico(**datos_paquete)
+        session.add(nuevo_paquete)
+        session.flush() # Esto genera el ID del paquete sin cerrar la transacción
+
+        # 3. Crear las conexiones en la tabla link
+        for d_id in destinos_ids:
+            link = PaqueteDestinoLink(
+                paquete_id=nuevo_paquete.id,
+                destino_id=d_id
+            )
+            session.add(link)
+        
+        nuevos_paquetes_creados.append(nuevo_paquete)
+
+    session.commit()
+    
+    for p in nuevos_paquetes_creados:
+        session.refresh(p)
+
+    return nuevos_paquetes_creados
 # --- PATCH: ACTUALIZACION PARCIAL ---
 @router.patch("/{paquete_id}")
 def actualizar_paquete(

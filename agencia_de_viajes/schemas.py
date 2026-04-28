@@ -32,10 +32,8 @@ class PaqueteBase(BaseModel):
     guia_id: Optional[int] = None
     transporte_id: Optional[int] = None
     hotel_id: Optional[int] = None
-
-
 class PaqueteCreate(PaqueteBase):
-    pass
+    destinos_ids: list[int] = []
 
 class PaqueteUpdate(BaseModel):
     nombre: Optional[str] = None

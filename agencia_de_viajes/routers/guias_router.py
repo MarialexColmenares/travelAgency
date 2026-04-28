@@ -49,6 +49,27 @@ def crear_guia(
 
     return nuevo_guia
 
+# --- POST BULK: CREAR MUCHOS NUEVO GUIAS ---
+@router.post("/bulk") # Sugiero llamarlo /bulk para diferenciarlo del individual
+def crear_guias_masivo(
+    lista_data: list[GuiaCreate],
+    session: Session = Depends(get_db)
+):
+    # Convertimos la lista de esquemas a lista de modelos de BD
+    nuevos_guias = [Guia(**guia.model_dump()) for guia in lista_data]
+    
+    # IMPORTANTE: Usar add_all para listas
+    session.add_all(nuevos_guias)
+    session.commit()
+    
+    # Refrescamos cada uno para obtener su ID generado
+    for guia in nuevos_guias:
+        session.refresh(guia)
+
+    return nuevos_guias
+
+
+
 # --- PATCH: ACTUALIZACIÓN PARCIAL ---
 @router.patch("/{id_guia}")
 def actualizar_guia_parcial(

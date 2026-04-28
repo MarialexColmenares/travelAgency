@@ -27,25 +27,40 @@ def obtener_transporte_id(id_hotel: int, session: Session = Depends(get_db)):
     return hotel
 
 # --- POST: CREAR NUEVO HOTEL---
-@router.post("")
-def crear_Hotel(
-    hotel_data: HotelCreate,
+@router.post("/")
+def crearCliente(
+    data: HotelCreate, # Recibe los datos validados por el esquema Pydantic
     session: Session = Depends(get_db)
-):
+    ):
+    # Instanciamos el modelo Cliente con los datos recibidos
     nuevo_hotel = Hotel(
-        nombre = hotel_data.nombre,
-        categoria = hotel_data.categoria,
-        direccion = hotel_data.direccion,
-        ciudad = hotel_data.ciudad,
-        contacto = hotel_data.contacto
+        **data.model_dump()
     )
-
-    session.add(nuevo_hotel)
-    session.commit()
-    session.refresh(nuevo_hotel)
-
+    session.add(nuevo_hotel)     # Preparamos la inserción
+    session.commit()              # Guardamos los cambios en la DB
+    session.refresh(nuevo_hotel) # Refrescamos para obtener el ID generado automáticamente
     return nuevo_hotel
 
+# --- POST BULK: CREAR MUCHOS NUEVOS HOTELES---
+@router.post("/bulk")
+def crear_Hoteles(
+    lista_data: list[HotelCreate],
+    session: Session = Depends(get_db)
+):
+    # Convertimos la lista de esquemas a lista de modelos
+    nuevos_hoteles = [Hotel(**hotel.model_dump()) for hotel in lista_data]
+    
+    # 1. USAR add_all para listas
+    session.add_all(nuevos_hoteles)
+    
+    # 2. Guardar cambios
+    session.commit()
+    
+    # 3. REFRESCAR uno por uno (no se puede refrescar una lista completa)
+    for hotel in nuevos_hoteles:
+        session.refresh(hotel)
+
+    return nuevos_hoteles
 # --- PATCH: ACTUALIZACION PARCIAL ---
 @router.patch("/{hotel_id}")
 def actualizar_parcial_hotel(
