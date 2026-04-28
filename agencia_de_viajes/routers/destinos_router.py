@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
-from agencia_de_viajes.database.conexion import get_db
-from agencia_de_viajes.modelos.models import Destino
-from agencia_de_viajes.esquemas.schemas import CreateDestino, UpdateDestino
+from database.conexion import get_db
+from modelos.models import Destino
+from esquemas.schemas import CreateDestino, UpdateDestino
 
 router = APIRouter(prefix="/destinos", tags=["Destinos"])
 
@@ -26,7 +26,7 @@ def obtener_destino_id(id_destino: int, session: Session = Depends(get_db)):
 
     return destino
 
-# --- GET: OBTENER UN DESTINOS FILTRADOS POR CIUDAD Y PAIS ---
+# --- GET: OBTENER UN DESTINOS FILTRADOS POR CIUDAD Y PAIS --- 
 @router.get("/filter")
 def filter_movies(ciudad: str, pais: str, session: Session = Depends(get_db)):
 
@@ -48,19 +48,18 @@ def crear_destino(
     return nuevo_destino
 
 # --- POST BULK: CREAR MUCHOS NUEVOS DESTINOS ---
-@router.post("/bulk") # Sugiero llamarlo /bulk para diferenciarlo del individual
+@router.post("/bulk")
 def crear_destinos_masivo(
     lista_data: list[CreateDestino],
     session: Session = Depends(get_db)
 ):
-    # Convertimos la lista de esquemas a lista de modelos de BD
+   
     nuevos_destinos = [Destino(**destino.model_dump()) for destino in lista_data]
     
-    # IMPORTANTE: Usar add_all para listas
+
     session.add_all(nuevos_destinos)
     session.commit()
-    
-    # Refrescamos cada uno para obtener su ID generado
+
     for destino in nuevos_destinos:
         session.refresh(destino)
 

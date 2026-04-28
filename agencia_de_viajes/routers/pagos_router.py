@@ -1,8 +1,8 @@
-from agencia_de_viajes.modelos.models import Pago
+from modelos.models import Pago
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
-from agencia_de_viajes.database.conexion import get_db
-from agencia_de_viajes.esquemas.schemas import PagoCreate, PagoUpdate
+from database.conexion import get_db
+from esquemas.schemas import PagoCreate, PagoUpdate
 
 router = APIRouter(prefix="/pagos",tags=["Pagos"])
 

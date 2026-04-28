@@ -1,5 +1,5 @@
 import psycopg2
-from agencia_de_viajes.modelos.models import *
+from modelos.models import *
 from sqlmodel import SQLModel, create_engine, Session
 
 dbUrl = "postgresql://postgres:31890@127.0.0.1:5432/travel_agency_db"

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
-from agencia_de_viajes.database.conexion import get_db
-from agencia_de_viajes.esquemas.schemas import GuiaCreate, GuiaUpdate
-from agencia_de_viajes.modelos.models import Guia
+from database.conexion import get_db
+from esquemas.schemas import GuiaCreate, GuiaUpdate
+from modelos.models import Guia
 
 router = APIRouter(prefix="/guias", tags=["Guias"])
 
@@ -30,17 +30,11 @@ def obtener_guia_id(id_guia: int, session: Session = Depends(get_db)):
 # --- POST: CREAR UN NUEVO GUIA ---
 @router.post("")
 def crear_guia(
-    guia_data: GuiaCreate,
+    data: GuiaCreate,
     session: Session = Depends(get_db)
 ):
-    # Se crea la instancia del modelo de base de datos asignando
-    # manualmente los valores recibidos desde el esquema Pydantic
     nuevo_guia = Guia(
-        nombre = guia_data.nombre,
-        idiomas = guia_data.idiomas,
-        experiencia = guia_data.experiencia,
-        telefono  = guia_data.telefono,
-        estado = guia_data.estado
+        **data.model_dump()
     )
 
     session.add(nuevo_guia)
@@ -50,19 +44,17 @@ def crear_guia(
     return nuevo_guia
 
 # --- POST BULK: CREAR MUCHOS NUEVO GUIAS ---
-@router.post("/bulk") # Sugiero llamarlo /bulk para diferenciarlo del individual
+@router.post("/bulk")
 def crear_guias_masivo(
     lista_data: list[GuiaCreate],
     session: Session = Depends(get_db)
 ):
-    # Convertimos la lista de esquemas a lista de modelos de BD
+    
     nuevos_guias = [Guia(**guia.model_dump()) for guia in lista_data]
     
-    # IMPORTANTE: Usar add_all para listas
     session.add_all(nuevos_guias)
     session.commit()
     
-    # Refrescamos cada uno para obtener su ID generado
     for guia in nuevos_guias:
         session.refresh(guia)
 

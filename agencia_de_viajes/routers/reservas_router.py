@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
-from agencia_de_viajes.database.conexion import get_db
-from agencia_de_viajes.modelos.models import Reserva, Transporte
-from agencia_de_viajes.esquemas.schemas import ReservaCreate, ReservaUpdate
+from database.conexion import get_db
+from modelos.models import Reserva, Transporte
+from esquemas.schemas import ReservaCreate, ReservaUpdate
 
 router = APIRouter(prefix="/reservas", tags=["Reservas"])
 
@@ -94,14 +94,10 @@ def consultar_saldo_reserva(reserva_id: int, session: Session = Depends(get_db))
     if not reserva:
         raise HTTPException(status_code=404, detail="Reserva no encontrada")
 
-    # 2. Calculamos el total pagado sumando la lista de pagos de la reserva
-    # Usamos la relación 'reserva.pagos' que definiste en tus modelos
     total_pagado = sum(pago.monto for pago in reserva.pagos)
 
-    # 3. Calculamos cuánto falta
     saldo_pendiente = reserva.monto_total - total_pagado
 
-    # 4. Guardamos todo en una variable para un retorno ordenado
     estado_cuenta = {
         "cliente": reserva.cliente.nombre,
         "paquete": reserva.paquete.nombre,

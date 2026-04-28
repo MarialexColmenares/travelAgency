@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from agencia_de_viajes.database.conexion import create_db_and_tables
+from database.conexion import create_db_and_tables
 from routers.clientes_router import router as client_router
 from routers.reservas_router import router as reservas_router
 from routers.paquetes_router import router as paquetes_router

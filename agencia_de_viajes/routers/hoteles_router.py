@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends,HTTPException
 from sqlmodel import Session, select
-from agencia_de_viajes.modelos.models import Hotel
-from agencia_de_viajes.database.conexion import get_db
-from agencia_de_viajes.esquemas.schemas import HotelCreate, HotelUpdate
+from modelos.models import Hotel
+from database.conexion import get_db
+from esquemas.schemas import HotelCreate, HotelUpdate
 
 router = APIRouter(prefix="/hoteles", tags=["Hoteles"])
 
@@ -29,16 +29,15 @@ def obtener_transporte_id(id_hotel: int, session: Session = Depends(get_db)):
 # --- POST: CREAR NUEVO HOTEL---
 @router.post("/")
 def crearCliente(
-    data: HotelCreate, # Recibe los datos validados por el esquema Pydantic
+    data: HotelCreate, 
     session: Session = Depends(get_db)
     ):
-    # Instanciamos el modelo Cliente con los datos recibidos
     nuevo_hotel = Hotel(
         **data.model_dump()
     )
-    session.add(nuevo_hotel)     # Preparamos la inserción
-    session.commit()              # Guardamos los cambios en la DB
-    session.refresh(nuevo_hotel) # Refrescamos para obtener el ID generado automáticamente
+    session.add(nuevo_hotel)   
+    session.commit()             
+    session.refresh(nuevo_hotel)
     return nuevo_hotel
 
 # --- POST BULK: CREAR MUCHOS NUEVOS HOTELES---
@@ -47,20 +46,17 @@ def crear_Hoteles(
     lista_data: list[HotelCreate],
     session: Session = Depends(get_db)
 ):
-    # Convertimos la lista de esquemas a lista de modelos
     nuevos_hoteles = [Hotel(**hotel.model_dump()) for hotel in lista_data]
     
-    # 1. USAR add_all para listas
     session.add_all(nuevos_hoteles)
     
-    # 2. Guardar cambios
     session.commit()
     
-    # 3. REFRESCAR uno por uno (no se puede refrescar una lista completa)
     for hotel in nuevos_hoteles:
         session.refresh(hotel)
 
     return nuevos_hoteles
+
 # --- PATCH: ACTUALIZACION PARCIAL ---
 @router.patch("/{hotel_id}")
 def actualizar_parcial_hotel(

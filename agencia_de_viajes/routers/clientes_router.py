@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
-from agencia_de_viajes.esquemas.schemas import ClienteCreate, clienteUpdate
+from esquemas.schemas import ClienteCreate, clienteUpdate
 from sqlmodel import Session, select
-from agencia_de_viajes.database.conexion import get_db
-from agencia_de_viajes.modelos.models import Cliente, Guia, Reserva
+from database.conexion import get_db
+from modelos.models import Cliente, Guia, Reserva
 
 # Definición del router para agrupar las rutas de 'Clientes' en la documentación (Swagger)
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
@@ -25,6 +25,26 @@ def get_id_cliente(cliente_id: int, session: Session = Depends(get_db)):
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente not found")
     return cliente
+
+# --- GET: SELECCION DE CLIENTE POR SU DOCUMENTO Y RESPUESTA DE ESTADOS DE RESERVA  ---
+@router.get("/{documento}")
+def get_documento_cliente(documento: str, session: Session = Depends(get_db)):
+    # Usamos select para buscar por un campo que no es la llave primaria
+    statement = select(Cliente).where(Cliente.documento == documento)
+    cliente = session.exec(statement).first() # first() devuelve el primer resultado o None
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente not found")
+    
+    info_cliente = {
+        "nombre": cliente.nombre,
+        "documento": cliente.documento,
+        "telefono": cliente.telefono,
+        "correo": cliente.correo,
+        "fechas de reservas": [reserva.fecha for reserva in cliente.reservas],# Lista de IDs de reservas asociadas
+        "estado de reservas": [reserva.estado for reserva in cliente.reservas]
+    }
+    
+    return info_cliente
 
 # --- POST: CREAR UN NUEVO CLIENTE ---
 @router.post("/")
@@ -142,3 +162,23 @@ def leer_reservas_por_cliente(
         raise HTTPException(status_code=404, detail="No se encontraron reservas para este cliente")
 
     return reservas
+
+# --- GET: SELECCION DE CLIENTE POR SU DOCUMENTO Y RESPUESTA DE ESTADOS DE RESERVA  ---
+@router.get("/{documento}")
+def get_documento_cliente(documento: str, session: Session = Depends(get_db)):
+    # Usamos select para buscar por un campo que no es la llave primaria
+    statement = select(Cliente).where(Cliente.documento == documento)
+    cliente = session.exec(statement).first() # first() devuelve el primer resultado o None
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente not found")
+    
+    info_cliente = {
+        "nombre": cliente.nombre,
+        "documento": cliente.documento,
+        "telefono": cliente.telefono,
+        "correo": cliente.correo,
+        "fechas de reservas": [reserva.fecha for reserva in cliente.reservas],# Lista de IDs de reservas asociadas
+        "estado de reservas": [reserva.estado for reserva in cliente.reservas]
+    }
+    
+    return info_cliente
