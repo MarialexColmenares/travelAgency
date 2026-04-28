@@ -11,3 +11,5 @@ responses/
 Lista_de_Cotejo_CRUD_FastAPI_PostgreSQL.pdf
 
 *.pdf
+
+datos.py
