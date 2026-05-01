@@ -19,11 +19,12 @@ def on_startup():
 def inicio():
     return {"message":"Agencia de viajes"}
 
-app.include_router(client_router)
-app.include_router(reservas_router)
-app.include_router(paquetes_router)
+app.include_router(destinos_router)
 app.include_router(guias_router)
 app.include_router(transportes_router)
+app.include_router(client_router)
 app.include_router(hoteles_router)
-app.include_router(destinos_router)
+app.include_router(paquetes_router)
+app.include_router(reservas_router)
 app.include_router(pagos_router)
+

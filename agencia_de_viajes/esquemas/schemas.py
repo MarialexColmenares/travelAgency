@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from datetime import date
 from pydantic import BaseModel, EmailStr
 
@@ -8,13 +8,10 @@ class ClienteBase(BaseModel):
     documento: str
     telefono: str
     correo: EmailStr
-
 class ClienteCreate(ClienteBase):
     pass  # Lo que el usuario envía al crear
-
 class ClienteRead(ClienteBase):
     id: int  # Lo que devolvemos (incluye el ID)
-
 class clienteUpdate(BaseModel):
     nombre: Optional[str] = None
     documento: Optional[str] = None
@@ -34,7 +31,6 @@ class PaqueteBase(BaseModel):
     hotel_id: Optional[int] = None
 class PaqueteCreate(PaqueteBase):
     destinos_ids: list[int] = []
-
 class PaqueteUpdate(BaseModel):
     nombre: Optional[str] = None
     descripcion: Optional[str] = None
@@ -55,10 +51,8 @@ class ReservaBase(BaseModel):
     comentarios: Optional[str] = None
     cliente_id: int
     paquete_id: int
-
 class ReservaCreate(ReservaBase):
     pass
-
 class ReservaUpdate(BaseModel):
     fecha: Optional[date] = None
     cantidad_personas: Optional[int] = None
@@ -75,10 +69,8 @@ class PagoBase(BaseModel):
     fecha_pago: date
     tipo_pago: str
     reserva_id: int
-
 class PagoCreate(PagoBase):
     pass
-
 class PagoUpdate(BaseModel):
     monto: Optional[float] = None
     fecha_pago: Optional[date] = None
@@ -89,8 +81,6 @@ class GuiaCreate(BaseModel):
     idiomas: str
     experiencia: int
     telefono: str
-    estado: str
-
 class GuiaUpdate(BaseModel):
     nombre: Optional[str] = None
     idiomas: Optional[str] = None
@@ -103,28 +93,35 @@ class TransporteCreate(BaseModel):
     tipo: str
     empresa: str
     capacidad: int
-    estado: str
-
 class TransporteUpdate(BaseModel):
     tipo: Optional[str] = None
     empresa: Optional[str] = None
     capacidad: Optional[int] = None
     estado: Optional[str] = None
-
-
+class paqueteConTransportes(BaseModel):
+    
+    nombre: str
+    
+    transporte: Optional[TransporteCreate] = None
+    class Config:
+        from_attributes = True
+        
 class HotelCreate(BaseModel):
     nombre: str
     categoria: int
     direccion: str
     ciudad: str
     contacto: str
-
-class HotelUpdate(BaseModel):
+    destino_id: Optional[int] = None
+class HotelUpdate(HotelCreate):
+    pass
+class HotelUpdateParcial(BaseModel):
     nombre: Optional[str] = None
     categoria: Optional[int] = None
     direccion: Optional[str] = None
     ciudad: Optional[str] = None
     contacto: Optional[str] = None
+
 
 class CreateDestino(BaseModel):
     ciudad: str
@@ -132,10 +129,30 @@ class CreateDestino(BaseModel):
     descripcion: str
     clima: str
     observaciones: Optional[str] = None
-
 class UpdateDestino(BaseModel):
     ciudad: Optional[str] = None
     pais: Optional[str] = None
     descripcion: Optional[str] = None
     clima: Optional[str] = None
     observaciones: Optional[str] = None
+    
+
+# --- NUEVOS ESQUEMAS PARA VISTA DE CLIENTE DE LOS PAQUETES ---
+class DestinoSimple(BaseModel):
+    ciudad: str
+    pais: str
+class PaqueteInfoCliente(BaseModel):
+    nombre: str
+    descripcion: str
+    duracion: str
+    precio: float
+    cupo: int
+    estado: str
+    # Campos personalizados para mostrar nombres en lugar de IDs
+    nombre_guia: Optional[str] = None
+    transporte_empresa: Optional[str] = None
+    nombre_hotel: Optional[str] = None
+    destinos: List[DestinoSimple] = []
+
+    class Config:
+        from_attributes = True

@@ -17,7 +17,8 @@ class Destino(SQLModel, table=True):
     descripcion: str
     clima: str
     observaciones: Optional[str] = None
-
+    
+    hoteles: List["Hotel"] = Relationship(back_populates="destino")
     paquetes: List["PaqueteTuristico"] = Relationship(back_populates="destinos", link_model=PaqueteDestinoLink)
 
 class Guia(SQLModel, table=True):
@@ -27,20 +28,20 @@ class Guia(SQLModel, table=True):
     idiomas: str
     experiencia: int
     telefono: str
-    estado: str  # Ejemplo: "Disponible", "En viaje"
+    estado: str = Field(default="Disponible")  # Ejemplo: "Disponible", "En viaje", "Inactivo"
 
     paquetes: List["PaqueteTuristico"] = Relationship(back_populates="guia")
-
+    
 class Transporte(SQLModel, table=True):
     """ Medios de transporte utilizados """
     id: Optional[int] = Field(default=None, primary_key=True)
     tipo: str  # Bus, Avión, etc.
     empresa: str
     capacidad: int
-    estado: str
-
+    estado: str = Field(default="Activo") # Ejemplo: "Fuera de Servicio", "Inactivo"
+    
     paquetes: List["PaqueteTuristico"] = Relationship(back_populates="transporte")
-
+    
 class Hotel(SQLModel, table=True):
     """ Alojamientos vinculados a los viajes """
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -49,9 +50,10 @@ class Hotel(SQLModel, table=True):
     direccion: str
     ciudad: str
     contacto: str
+    destino_id: Optional[int] = Field(default=None, foreign_key="destino.id")
     # Permite acceder a la lista de todos los paquetes asignados a este transporte
     paquetes: List["PaqueteTuristico"] = Relationship(back_populates="hotel")
-
+    destino: Optional["Destino"] = Relationship(back_populates="hoteles")
 
 # 3. NÚCLEO DEL NEGOCIO (PAQUETES Y CLIENTES)
 class PaqueteTuristico(SQLModel, table=True):
@@ -62,7 +64,7 @@ class PaqueteTuristico(SQLModel, table=True):
     duracion: str
     precio: float
     cupo: int
-    estado: str # agotado, disponible
+    estado: str = Field(default="Disponible")   # agotado, disponible, inactivo
 
     # Claves Foráneas (Conexión con servicios)
     guia_id: Optional[int] = Field(default=None, foreign_key="guia.id")
@@ -88,8 +90,6 @@ class Cliente(SQLModel, table=True):
     is_active: bool = True
 
     reservas: List["Reserva"] = Relationship(back_populates="cliente")
-
-
 
 # 4. TRANSACCIONES (RESERVAS Y PAGOS)
 class Reserva(SQLModel, table=True):

@@ -1,34 +1,14 @@
 from fastapi import APIRouter, Depends,HTTPException
 from sqlmodel import Session, select
 from database.conexion import get_db
-from esquemas.schemas import PaqueteCreate, PaqueteUpdate
+from esquemas.schemas import PaqueteCreate, PaqueteUpdate, PaqueteInfoCliente, DestinoSimple
 from modelos.models import PaqueteDestinoLink, PaqueteTuristico
 
-router = APIRouter(prefix="/paquetes", tags=["Paquetes_Turisticos"])
-
-# --- GET: OBTENER TODOS LOS PAQUETES TURISTICOS ---
-@router.get("/paquetesTuristicos")
-def mostrar_paquetes(session: Session = Depends(get_db)):
-
-    statement = select(PaqueteTuristico)
-    paquetes = session.exec(statement).all()
-
-    return paquetes
-
-# --- GET: OBTENER UN PAQUETE POR SU ID ---
-@router.get("/paquete{id_paquete}")
-def obtener_transporte_id(id_paquete: int, session: Session = Depends(get_db)):
-    paquete = session.get(PaqueteTuristico, id_paquete)
-
-    if not paquete:
-
-        raise HTTPException(status_code=404, detail="Paquete not found")
-
-    return paquete
+router = APIRouter(prefix="/paquetes", tags=["Paquetes Turisticos"])
 
 # --- POST: CREAR UN NUEVO PAQUETE ---
 @router.post("/paquetesTuristicos")
-def crear_paquete_turistico(
+def crear_paquete_turistico_con_destinos(
     paquete_data: PaqueteCreate,
     session: Session = Depends(get_db)
 ):
@@ -49,6 +29,17 @@ def crear_paquete_turistico(
     session.refresh(nuevo_paquete)
 
     return nuevo_paquete
+
+# --- GET: OBTENER TODOS LOS PAQUETES TURISTICOS ---
+@router.get("/paquetesTuristicos")
+def mostrar_paquetes(
+    session: Session = Depends(get_db)
+):
+
+    statement = select(PaqueteTuristico)
+    paquetes = session.exec(statement).all()
+
+    return paquetes
 
 # --- POST BULK: CREAR MUCHOS NUEVOS PAQUETES---
 @router.post("/bulk")
@@ -104,6 +95,26 @@ def actualizar_paquete(
     session.refresh(db_paquete)
     return db_paquete
 
+# --- DELETE: ELIMINACIÓN LÓGICA DE PAQUETE ---
+@router.delete("/desactivar/{id_paquete}")
+def desactivar_paquete(
+    id_paquete: int,
+    session: Session = Depends(get_db)
+):
+    # 1. Buscamos el paquete en la base de datos
+    db_paquete = session.get(PaqueteTuristico, id_paquete)
+
+    if not db_paquete:
+        raise HTTPException(status_code=404, detail="Paquete no encontrado")
+
+    db_paquete.estado = "Inactivo"
+
+    session.add(db_paquete)
+    session.commit()
+    session.refresh(db_paquete)
+
+    return {"mensaje": f"El paquete '{db_paquete.nombre}' ha sido desactivado exitosamente"}
+
 #--- DISPONIBILIDAD DE CUPOS EN UN PAQUETE  ---
 @router.get("/{paquete_id}/disponibilidad")
 def consultar_disponibilidad(paquete_id: int, session: Session = Depends(get_db)):
@@ -131,3 +142,65 @@ def consultar_disponibilidad(paquete_id: int, session: Session = Depends(get_db)
 
     # 4. Retornamos la variable
     return reporte_disponibilidad
+
+# --- GET: OBTENER UN PAQUETE POR SU ID ---
+@router.get("/paquete/{id_paquete}")
+def obtener_transporte_id(
+    id_paquete: int, 
+    session: Session = Depends(get_db)
+):
+    paquete = session.get(PaqueteTuristico, id_paquete)
+
+    if not paquete:
+
+        raise HTTPException(status_code=404, detail="Paquete not found")
+
+    return paquete
+
+# --- GET: OBTENER PAQUETE POR NOMBRE ---
+@router.get("/nombre/{nombre_paquete}")
+def obtener_paquete_por_nombre(
+    nombre_paquete: str,
+    session: Session = Depends(get_db)
+):
+
+    statement = select(PaqueteTuristico).where(PaqueteTuristico.nombre.contains(nombre_paquete))
+    paquetes = session.exec(statement).all()
+
+    if not paquetes:
+        raise HTTPException(
+            status_code=404, 
+            detail=f"No se encontró ningún paquete que coincida con '{nombre_paquete}'"
+        )
+
+    return paquetes
+
+@router.get("/{id_paquete}/info-cliente", response_model=PaqueteInfoCliente)
+def obtener_info_publica_paquete(
+    id_paquete: int, 
+    session: Session = Depends(get_db)
+):
+    # Buscamos el paquete
+    paquete = session.get(PaqueteTuristico, id_paquete)
+    
+    if not paquete:
+        raise HTTPException(status_code=404, detail="Paquete no encontrado")
+
+    # Construimos la respuesta extrayendo los nombres de las relaciones
+    return PaqueteInfoCliente(
+        nombre=paquete.nombre,
+        descripcion=paquete.descripcion,
+        duracion=paquete.duracion,
+        precio=paquete.precio,
+        cupo=paquete.cupo,
+        estado=paquete.estado,
+        # Accedemos a los objetos relacionados gracias a Relationship en models.py
+        nombre_guia=paquete.guia.nombre if paquete.guia else "No asignado",
+        transporte_empresa=paquete.transporte.empresa if paquete.transporte else "No asignado",
+        nombre_hotel=paquete.hotel.nombre if paquete.hotel else "No asignado",
+        # Mapeamos la lista de destinos a nuestro esquema simple
+        destinos=[
+            DestinoSimple(ciudad=d.ciudad, pais=d.pais) 
+            for d in paquete.destinos
+        ]
+    )

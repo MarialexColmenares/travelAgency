@@ -1,6 +1,6 @@
 # ✈️ Sistema de Gestión - Agencia de Viajes
 
-Este proyecto es una **API REST** robusta desarrollada con **FastAPI** para la gestión integral de una agencia de viajes. El sistema permite administrar catálogos de servicios (hoteles, guías, transportes), diseñar paquetes turísticos dinámicos y gestionar el ciclo de vida completo de reservas y pagos de forma relacional.
+Este proyecto es una **API** robusta desarrollada con **FastAPI** para la gestión integral de una agencia de viajes. El sistema permite administrar catálogos de servicios (hoteles, guías, transportes), diseñar paquetes turísticos dinámicos y gestionar el ciclo de vida completo de reservas y pagos de forma relacional.
 
 ---
 

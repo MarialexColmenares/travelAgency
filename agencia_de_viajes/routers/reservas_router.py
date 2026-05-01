@@ -8,7 +8,7 @@ router = APIRouter(prefix="/reservas", tags=["Reservas"])
 
 # --- GET: OBTENER TODOS LAS RESERVAS ---
 @router.get("/reservas")
-def leer_reservas(
+def mostrar_reservas(
     session: Session = Depends(get_db)):
 
     statement = select(Reserva)
@@ -52,7 +52,7 @@ def crear_reserva(
 
 # --- POST BULK: CREAR MUCHAS NUEVAS RESERVAS---
 @router.post("/bulk")
-def crear_reservas(
+def crear_reservas_masivo(
     reservas_data: list[ReservaCreate],
     session: Session = Depends(get_db)
 ):
@@ -64,7 +64,6 @@ def crear_reservas(
         session.refresh(reserva)
 
     return nuevas_reservas
-
 
 # --- PATCH: ACTUALIZACION PARCIAL---
 @router.patch("/{reserva_id}")

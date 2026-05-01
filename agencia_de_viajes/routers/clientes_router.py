@@ -7,48 +7,10 @@ from modelos.models import Cliente, Guia, Reserva
 # Definición del router para agrupar las rutas de 'Clientes' en la documentación (Swagger)
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
-# --- GET: OBTENER TODOS LOS CLIENTES ---
-@router.get("/")
-def leer_clientes(session: Session = Depends(get_db)):
-    # Se crea la sentencia SQL: SELECT * FROM cliente
-    statement = select(Cliente)
-    # Ejecutamos la sentencia y convertimos los resultados en una lista
-    clientes = session.exec(statement).all()
-    return clientes
-
-# --- GET: OBTENER UN CLIENTE POR ID ---
-@router.get("/id{cliente_id}")
-def get_id_cliente(cliente_id: int, session: Session = Depends(get_db)):
-    # session.get busca directamente por la llave primaria
-    cliente = session.get(Cliente, cliente_id)
-    # Si no existe, lanzamos un error 404 (Not Found)
-    if not cliente:
-        raise HTTPException(status_code=404, detail="Cliente not found")
-    return cliente
-
-# --- GET: SELECCION DE CLIENTE POR SU DOCUMENTO Y RESPUESTA DE ESTADOS DE RESERVA  ---
-@router.get("/{documento}")
-def get_documento_cliente(documento: str, session: Session = Depends(get_db)):
-    # Usamos select para buscar por un campo que no es la llave primaria
-    statement = select(Cliente).where(Cliente.documento == documento)
-    cliente = session.exec(statement).first() # first() devuelve el primer resultado o None
-    if not cliente:
-        raise HTTPException(status_code=404, detail="Cliente not found")
-    
-    info_cliente = {
-        "nombre": cliente.nombre,
-        "documento": cliente.documento,
-        "telefono": cliente.telefono,
-        "correo": cliente.correo,
-        "fechas de reservas": [reserva.fecha for reserva in cliente.reservas],# Lista de IDs de reservas asociadas
-        "estado de reservas": [reserva.estado for reserva in cliente.reservas]
-    }
-    
-    return info_cliente
 
 # --- POST: CREAR UN NUEVO CLIENTE ---
 @router.post("/")
-def crearCliente(
+def crear_cliente(
     cliente_data: ClienteCreate, # Recibe los datos validados por el esquema Pydantic
     session: Session = Depends(get_db)
     ):
@@ -64,29 +26,63 @@ def crearCliente(
     session.refresh(NuevoCliente) # Refrescamos para obtener el ID generado automáticamente
     return NuevoCliente
 
+# --- GET: OBTENER TODOS LOS CLIENTES ---
+@router.get("/mostrar")
+def mostrar_clientes(
+    session: Session = Depends(get_db)):
+    # Se crea la sentencia SQL: SELECT * FROM cliente
+    statement = select(Cliente)
+    # Ejecutamos la sentencia y convertimos los resultados en una lista
+    clientes = session.exec(statement).all()
+    return clientes
+
+# --- GET: OBTENER UN CLIENTE POR ID ---
+@router.get("/mostrar/{cliente_id}")
+def mostrar_cliente_id(
+    cliente_id: int, 
+    session: Session = Depends(get_db)):
+    # session.get busca directamente por la llave primaria
+    cliente = session.get(Cliente, cliente_id)
+    # Si no existe, lanzamos un error 404 (Not Found)
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente not found")
+    
+    return cliente
+
+# --- GET: CLIENTES ACTIVOS ---
+@router.get("/activas/")
+def mostrar_clientes_activos(
+    session: Session = Depends(get_db)
+):
+    statement = select(Cliente).where(Cliente.estado == True)
+    cliente = session.exec(statement).all()
+    
+    return cliente
+
 # --- POST BULK: CREAR MUCHOS NUEVOS CLIENTES ---
-@router.post("/bulk") # Sugiero llamarlo /bulk para diferenciarlo del individual
-def crear_CLIENTES_masivo(
+@router.post("/bulk")
+def crear_clientes_masivo(
     lista_data: list[ClienteCreate],
     session: Session = Depends(get_db)
 ):
-    # Convertimos la lista de esquemas a lista de modelos de BD
-    nuevos_clientes = [Cliente(**cliente.model_dump()) for cliente in lista_data]
-    
-    # IMPORTANTE: Usar add_all para listas
+    nuevos_clientes = [
+
+        Cliente(
+            **cliente.model_dump()
+        )
+        for cliente in lista_data
+]    
     session.add_all(nuevos_clientes)
     session.commit()
-    
-    # Refrescamos cada uno para obtener su ID generado
+
     for cliente in nuevos_clientes:
         session.refresh(cliente)
 
     return nuevos_clientes
 
-
 # --- PUT: ACTUALIZACIÓN TOTAL ---
 @router.put("/{cliente_id}")
-def actualizar_cliente(
+def actualizacion_completa(
     cliente_id: int,
     cliente_data: clienteUpdate,
     session: Session = Depends(get_db)
@@ -110,7 +106,7 @@ def actualizar_cliente(
 
 # --- PATCH: ACTUALIZACIÓN PARCIAL ---
 @router.patch("/{cliente_id}")
-def actualizar_parcial_cliente(
+def actualizacion_parcial(
     cliente_id: int,
     cliente_data: clienteUpdate,
     session: Session = Depends(get_db)
@@ -132,7 +128,7 @@ def actualizar_parcial_cliente(
 
 # --- DELETE: ELIMINACIÓN LÓGICA ---
 @router.delete("/{cliente_id}")
-def eliminacion_logica_cliente(
+def eliminacion_logica(
     cliente_id: int,
     session: Session = Depends(get_db)
 ):
@@ -150,7 +146,7 @@ def eliminacion_logica_cliente(
 
 # --- GET: RESERVAS ASOCIADAS A UN CLIENTE ---
 @router.get("/reservas/{cliente_id}")
-def leer_reservas_por_cliente(
+def mostrar_reservas_de_cliente(
     cliente_id: int,
     session: Session = Depends(get_db)
 ):
@@ -164,11 +160,15 @@ def leer_reservas_por_cliente(
     return reservas
 
 # --- GET: SELECCION DE CLIENTE POR SU DOCUMENTO Y RESPUESTA DE ESTADOS DE RESERVA  ---
-@router.get("/{documento}")
-def get_documento_cliente(documento: str, session: Session = Depends(get_db)):
+@router.get("/mostrar/{documento}")
+def filtrar_clientes_por_documento(
+    documento: str, 
+    session: Session = Depends(get_db)
+):
     # Usamos select para buscar por un campo que no es la llave primaria
     statement = select(Cliente).where(Cliente.documento == documento)
     cliente = session.exec(statement).first() # first() devuelve el primer resultado o None
+    
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente not found")
     
@@ -180,5 +180,28 @@ def get_documento_cliente(documento: str, session: Session = Depends(get_db)):
         "fechas de reservas": [reserva.fecha for reserva in cliente.reservas],# Lista de IDs de reservas asociadas
         "estado de reservas": [reserva.estado for reserva in cliente.reservas]
     }
-    
     return info_cliente
+
+# --- GET: RESUMEN DE VIAJERO ---
+@router.get("/{cliente_id}/resumen")
+def obtener_resumen_viajero(
+    cliente_id: int,
+    session: Session = Depends(get_db)
+):
+    cliente = session.get(Cliente, cliente_id)
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado")
+
+    # Calculamos datos interesantes
+    total_invertido = sum(r.monto_total for r in cliente.reservas)
+    
+    # Obtenemos los nombres de los paquetes (sin repetir)
+    nombres_paquetes = list(set(r.paquete.nombre for r in cliente.reservas))
+
+    return {
+        "cliente": cliente.nombre,
+        "documento": cliente.documento,
+        "cantidad_viajes": len(cliente.reservas),
+        "total_gastado": total_invertido,
+        "paquetes_disfrutados": nombres_paquetes
+    }
