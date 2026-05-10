@@ -61,7 +61,7 @@ def crear_clientes_masivo(
     return nuevos_clientes
 
 # --- GET: CLIENTES ACTIVOS ---
-@router.get("/activos/")
+@router.get("/activos")
 def mostrar_clientes_activos(
     session: Session = Depends(get_db)
 ):
@@ -74,20 +74,6 @@ def mostrar_clientes_activos(
             detail="No se Encontraron clientes Activos"
         )
     return clientes
-
-# --- GET: RESERVAS ASOCIADAS A UN CLIENTE ---
-@router.get("/{cliente_id}/reservas")
-def mostrar_reservas_de_cliente(
-    cliente_id: int,
-    session: Session = Depends(get_db)
-):
-    statement = select(Reserva).where(Reserva.cliente_id == cliente_id)
-    reservas = session.exec(statement).all()
-
-    if not reservas:
-        raise HTTPException(status_code=404, detail="No se encontraron reservas para este cliente")
-
-    return reservas
 
 # --- GET: SELECCION DE CLIENTE POR SU DOCUMENTO Y RESPUESTA DE ESTADOS DE RESERVA  ---
 @router.get("/{documento}")
@@ -110,6 +96,21 @@ def filtrar_clientes_por_documento(
         "estado de reservas": [reserva.estado for reserva in cliente.reservas]
     }
     return info_cliente
+
+# --- GET: RESERVAS ASOCIADAS A UN CLIENTE ---
+@router.get("/{cliente_id}/reservas")
+def mostrar_reservas_de_cliente(
+    cliente_id: int,
+    session: Session = Depends(get_db)
+):
+    statement = select(Reserva).where(Reserva.cliente_id == cliente_id)
+    reservas = session.exec(statement).all()
+
+    if not reservas:
+        raise HTTPException(status_code=404, detail="No se encontraron reservas para este cliente")
+
+    return reservas
+
 
 # --- GET: RESUMEN DE VIAJERO ---
 @router.get("/{cliente_id}/resumen")
@@ -214,3 +215,31 @@ def eliminacion_logica(
     session.commit()
     session.refresh(db_cliente)
     return db_cliente
+
+# --- PATCH: RE-ACTIVACION ---
+@router.patch("/{id_cliente}/activar")
+def activar_cliente(
+    id_cliente: int,
+    session: Session = Depends(get_db)
+):
+    db_cliente = session.get(Cliente, id_cliente)
+    
+    if not db_cliente:
+        raise HTTPException(
+            status_code=404, 
+            detail="Cliente no encontrado"
+        )
+    
+    if db_cliente.is_active:
+        raise HTTPException(
+            status_code=400,
+            detail=f"El Cliente {db_cliente.nombre} ya se encuentra activo"
+        )
+        
+    db_cliente.is_active = True
+    
+    session.add(db_cliente)
+    session.commit()
+    session.refresh(db_cliente)
+    
+    return {"message": f"El Cliente {db_cliente.nombre} ha sido reactivado con éxito"}
