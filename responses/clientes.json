@@ -1,0 +1,62 @@
+[
+  {
+    "nombre": "Carlos Pérez",
+    "documento": "V-12345678",
+    "telefono": "0414-1112233",
+    "correo": "carlos.perez@gmail.com"
+  },
+  {
+    "nombre": "Ana Rodríguez",
+    "documento": "V-15987412",
+    "telefono": "0424-5556677",
+    "correo": "ana.rod@hotmail.com"
+  },
+  {
+    "nombre": "Luis García",
+    "documento": "V-18456123",
+    "telefono": "0412-9990011",
+    "correo": "lgarcia_dev@outlook.com"
+  },
+  {
+    "nombre": "Mariana Gómez",
+    "documento": "V-20123987",
+    "telefono": "0416-3334455",
+    "correo": "m.gomez.viajes@gmail.com"
+  },
+  {
+    "nombre": "José Gregorio Hernández",
+    "documento": "V-10258369",
+    "telefono": "0424-8887799",
+    "correo": "jose.g.h@gmail.com"
+  },
+  {
+    "nombre": "Elena Martínez",
+    "documento": "V-22147852",
+    "telefono": "0414-7778844",
+    "correo": "emartinez.vzla@yahoo.com"
+  },
+  {
+    "nombre": "Ricardo Torres",
+    "documento": "V-19632541",
+    "telefono": "0412-2223366",
+    "correo": "rtorres_viajero@gmail.com"
+  },
+  {
+    "nombre": "Sofía Villamizar",
+    "documento": "V-25874123",
+    "telefono": "0426-4441122",
+    "correo": "sofia.villa@gmail.com"
+  },
+  {
+    "nombre": "Andrés Bello",
+    "documento": "V-14785236",
+    "telefono": "0414-6663322",
+    "correo": "abello_edu@hotmail.com"
+  },
+  {
+    "nombre": "Gabriela Salas",
+    "documento": "V-28963147",
+    "telefono": "0412-1234567",
+    "correo": "gaby.salas@outlook.com"
+  }
+] 

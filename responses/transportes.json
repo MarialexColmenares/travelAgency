@@ -1,0 +1,52 @@
+[
+  {
+    "tipo": "avioneta",
+    "empresa": "Canaima Airs",
+    "capacidad": 4
+  },
+  {
+    "tipo": "bus pulman",
+    "empresa": "Expresos Mérida",
+    "capacidad": 45
+  },
+  {
+    "tipo": "ferry",
+    "empresa": "Navibus Margarita",
+    "capacidad": 200
+  },
+  {
+    "tipo": "camioneta 4x4",
+    "empresa": "Ruta Extrema Gran Sabana",
+    "capacidad": 6
+  },
+  {
+    "tipo": "catamarán",
+    "empresa": "Caribbean Tours",
+    "capacidad": 30
+  },
+  {
+    "tipo": "lancha rápida",
+    "empresa": "Morrocoy Boats",
+    "capacidad": 12
+  },
+  {
+    "tipo": "tren de alta velocidad",
+    "empresa": "EuroRail Italia",
+    "capacidad": 350
+  },
+  {
+    "tipo": "minibús",
+    "empresa": "TransColombia Express",
+    "capacidad": 15
+  },
+  {
+    "tipo": "crucero",
+    "empresa": "Royal Caribbean",
+    "capacidad": 2500
+  },
+  {
+    "tipo": "vuelo comercial",
+    "empresa": "Conviasa",
+    "capacidad": 120
+  }
+]

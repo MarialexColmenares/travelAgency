@@ -1,0 +1,72 @@
+[
+  {
+    "nombre": "Hotel Humboldt",
+    "categoria": 5,
+    "direccion": "Cima del Cerro El Ávila",
+    "contacto": "+58-212-2081900",
+    "destino_id": 1
+  },
+  {
+    "nombre": "Hesperia Isla Margarita",
+    "categoria": 5,
+    "direccion": "Playa El Agua, Pedro González",
+    "contacto": "recepcion@hesperia-isla-margarita.com",
+    "destino_id": 2
+  },
+  {
+    "nombre": "Posada La Rosaleda",
+    "categoria": 3,
+    "direccion": "Sector Los Aleros, Carretera Trasandina",
+    "contacto": "0274-2441010",
+    "destino_id": 4
+  },
+  {
+    "nombre": "Hotel Trinitarias Suites",
+    "categoria": 5,
+    "direccion": "Av. Los Leones con Av. Libertador",
+    "contacto": "reservas@trinitarias.com",
+    "destino_id": 6
+  },
+  {
+    "nombre": "Campamento Ucaima",
+    "categoria": 4,
+    "direccion": "Sector Laguna de Canaima",
+    "contacto": "ucaima@canaima.ve",
+    "destino_id": 8
+  },
+  {
+    "nombre": "Hotel Renaissance",
+    "categoria": 5,
+    "direccion": "Av. Eugenio Mendoza con Calle Urdaneta",
+    "contacto": "+58-212-9083232",
+    "destino_id": 1
+  },
+  {
+    "nombre": "Posada Médano Blanco",
+    "categoria": 3,
+    "direccion": "Sector Médanos de Coro",
+    "contacto": "contacto@medanoblanco.com",
+    "destino_id": 7
+  },
+  {
+    "nombre": "Hotel Intercontinental del Lago",
+    "categoria": 5,
+    "direccion": "Av. 2 El Milagro",
+    "contacto": "0261-7966000",
+    "destino_id": 6
+  },
+  {
+    "nombre": "Hotel Maremares",
+    "categoria": 4,
+    "direccion": "Av. Americo Vespucio, Complejo El Morro",
+    "contacto": "info@maremares.com",
+    "destino_id": 10
+  },
+  {
+    "nombre": "Posada Galápagos",
+    "categoria": 4,
+    "direccion": "Gran Roque",
+    "contacto": "reservas@losroques-galapagos.com",
+    "destino_id": 2
+  }
+]

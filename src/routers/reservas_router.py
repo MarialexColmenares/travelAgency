@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from database.conexion import get_db
-from models.modelos import Reserva, Transporte
+from models.modelos import Reserva, PaqueteTuristico
 from schemas.esquemas import ReservaCreate, ReservaUpdate
 
 router = APIRouter(prefix="/reservas", tags=["Reservas"])
@@ -22,20 +22,35 @@ def mostrar_reservas(
     return reservas
 
 # --- POST: CREAR UNA NUEVA RESERVA ---
-@router.post("/")
-def crear_reserva(
-    data_reserva: ReservaCreate,
-    session: Session = Depends(get_db)
-):
-    nueva_reserva = Reserva(
-        **data_reserva.model_dump()
-    )
+@router.post("/reservas/")
+def crear_reserva(reserva: Reserva, session: Session = Depends(get_db)):
+    paquete = session.get(PaqueteTuristico, reserva.paquete_id)
+    
+    if not paquete:
+        raise HTTPException(status_code=404, detail="El paquete seleccionado no existe")
+    
+    if paquete.cupo < reserva.cantidad_personas:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"No hay cupo suficiente. Lugares disponibles: {paquete.cupo}"
+        )
 
-    session.add(nueva_reserva)
+    reserva.monto_total = paquete.precio * reserva.cantidad_personas
+    paquete.cupo -= reserva.cantidad_personas
+    
+    if paquete.cupo == 0:
+        paquete.estado = "Agotado"
+
+    session.add(reserva) 
+    session.add(paquete) 
     session.commit()
-    session.refresh(nueva_reserva)
-
-    return nueva_reserva
+    session.refresh(reserva)
+    
+    return {
+        "mensaje": "Reserva creada exitosamente",
+        "detalle": reserva,
+        "cupos_restantes_en_paquete": paquete.cupo
+    }
 
 # --- POST BULK: CREAR MUCHAS NUEVAS RESERVAS---
 @router.post("/bulk")

@@ -1,0 +1,122 @@
+[
+  {
+    "nombre": "Aventura en los Alpes",
+    "descripcion": "Senderismo y vistas espectaculares en el corazón de Europa.",
+    "duracion": "7 días",
+    "precio": 1200.5,
+    "cupo": 15,
+    "estado": "Disponible",
+    "guia_id": 1,
+    "transporte_id": 2,
+    "hotel_id": 10,
+    "destinos_ids": [1, 4]
+  },
+  {
+    "nombre": "Ruta del Sushi y Templos",
+    "descripcion": "Un recorrido cultural por lo mejor de la tecnología y tradición japonesa.",
+    "duracion": "10 días",
+    "precio": 2500.0,
+    "cupo": 10,
+    "estado": "Disponible",
+    "guia_id": 2,
+    "transporte_id": 1,
+    "hotel_id": 12,
+    "destinos_ids": [2]
+  },
+  {
+    "nombre": "Expedición Salto Ángel",
+    "descripcion": "Vuelo y excursión al pie de la caída de agua más alta del mundo.",
+    "duracion": "4 días",
+    "precio": 450.0,
+    "cupo": 8,
+    "estado": "Disponible",
+    "guia_id": 3,
+    "transporte_id": 3,
+    "hotel_id": 13,
+    "destinos_ids": [3, 5]
+  },
+  {
+    "nombre": "Historia Viva en Roma",
+    "descripcion": "Visita guiada por el Coliseo, el Foro Romano y el Vaticano.",
+    "duracion": "5 días",
+    "precio": 850.0,
+    "cupo": 20,
+    "estado": "Agotado",
+    "guia_id": 1,
+    "transporte_id": 2,
+    "hotel_id": 14,
+    "destinos_ids": [4, 5]
+  },
+  {
+    "nombre": "Luces del Norte",
+    "descripcion": "Búsqueda de auroras boreales en los paisajes gélidos de Islandia.",
+    "duracion": "6 días",
+    "precio": 1800.0,
+    "cupo": 12,
+    "estado": "Disponible",
+    "guia_id": 4,
+    "transporte_id": 4,
+    "hotel_id": 15,
+    "destinos_ids": [1, 9]
+  },
+  {
+    "nombre": "Escapada al Caribe Colonial",
+    "descripcion": "Relájate en las murallas de Cartagena y disfruta sus playas.",
+    "duracion": "4 días",
+    "precio": 320.99,
+    "cupo": 25,
+    "estado": "Disponible",
+    "guia_id": 5,
+    "transporte_id": 3,
+    "hotel_id": 16,
+    "destinos_ids": [6]
+  },
+  {
+    "nombre": "Luces de Broadway",
+    "descripcion": "Fin de semana en la Gran Manzana visitando Times Square y Central Park.",
+    "duracion": "3 días",
+    "precio": 990.0,
+    "cupo": 30,
+    "estado": "Disponible",
+    "guia_id": 2,
+    "transporte_id": 1,
+    "hotel_id": 17,
+    "destinos_ids": [7]
+  },
+  {
+    "nombre": "Joyas de Gaudí",
+    "descripcion": "Tour arquitectónico por la Sagrada Familia y el Parque Güell.",
+    "duracion": "5 días",
+    "precio": 650.0,
+    "cupo": 18,
+    "estado": "Mantenimiento",
+    "guia_id": 3,
+    "transporte_id": 2,
+    "hotel_id": 18,
+    "destinos_ids": [8]
+  },
+  {
+    "nombre": "Misterios de las Pirámides",
+    "descripcion": "Un viaje en el tiempo recorriendo Giza y el Museo de El Cairo.",
+    "duracion": "8 días",
+    "precio": 1100.0,
+    "cupo": 15,
+    "estado": "Disponible",
+    "guia_id": 4,
+    "transporte_id": 4,
+    "hotel_id": 19,
+    "destinos_ids": [9]
+  },
+  {
+    "nombre": "Costa Australiana",
+    "descripcion": "Surf, naturaleza y la icónica Ópera de Sídney.",
+    "duracion": "12 días",
+    "precio": 2900.0,
+    "cupo": 10,
+    "estado": "Disponible",
+    "guia_id": 5,
+    "transporte_id": 1,
+    "hotel_id": 11,
+    "destinos_ids": [10]
+  }
+]

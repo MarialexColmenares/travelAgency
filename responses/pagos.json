@@ -1,0 +1,62 @@
+[
+  {
+    "monto": 2401.0,
+    "fecha_pago": "2026-05-10",
+    "tipo_pago": "Transferencia Bancaria",
+    "reserva_id": 1
+  },
+  {
+    "monto": 1250.0,
+    "fecha_pago": "2026-05-11",
+    "tipo_pago": "Zelle",
+    "reserva_id": 2
+  },
+  {
+    "monto": 1800.0,
+    "fecha_pago": "2026-05-12",
+    "tipo_pago": "Pago Móvil",
+    "reserva_id": 3
+  },
+  {
+    "monto": 500.0,
+    "fecha_pago": "2026-05-13",
+    "tipo_pago": "Efectivo",
+    "reserva_id": 4
+  },
+  {
+    "monto": 5400.0,
+    "fecha_pago": "2026-05-14",
+    "tipo_pago": "Transferencia Internacional",
+    "reserva_id": 5
+  },
+  {
+    "monto": 300.0,
+    "fecha_pago": "2026-05-15",
+    "tipo_pago": "Tarjeta de Crédito",
+    "reserva_id": 6
+  },
+  {
+    "monto": 4950.0,
+    "fecha_pago": "2026-05-16",
+    "tipo_pago": "Zelle",
+    "reserva_id": 7
+  },
+  {
+    "monto": 650.0,
+    "fecha_pago": "2026-05-17",
+    "tipo_pago": "Pago Móvil",
+    "reserva_id": 8
+  },
+  {
+    "monto": 1100.0,
+    "fecha_pago": "2026-05-18",
+    "tipo_pago": "Efectivo",
+    "reserva_id": 9
+  },
+  {
+    "monto": 5800.0,
+    "fecha_pago": "2026-05-19",
+    "tipo_pago": "Transferencia Bancaria",
+    "reserva_id": 10
+  }
+]

@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 from database.conexion import get_db
 from models.modelos import Destino
 from schemas.esquemas import CreateDestino, UpdateDestino, UpdateDestinoParcial
-from typing import Optional
+from typing import Optional, List
 
 router = APIRouter(prefix="/destinos", tags=["Destinos"])
 
@@ -27,7 +27,7 @@ def crear_destino(
 # --- POST BULK: CREAR MUCHOS NUEVOS DESTINOS ---
 @router.post("/bulk")
 def crear_destinos_masivo(
-    lista_data: list[CreateDestino],
+    lista_data: List[CreateDestino],
     session: Session = Depends(get_db)
 ):
     nuevos_destinos = [
@@ -208,4 +208,4 @@ def eliminar_destino(
     session.commit()
     session.refresh(db_destino)
     
-    return {"message": f"Destino con id {id_destino} ha sido eliminado"}
+    return {"message": f"Destino {db_destino.ciudad} ha sido eliminado"}

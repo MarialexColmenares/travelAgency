@@ -21,7 +21,7 @@ def mostrar_pago(session : Session = Depends(get_db) ):
 
     return pagos
 
-# --- POST: CREAR UN VUEVO PAGO---
+# --- POST: CREAR UN NUEVO PAGO---
 @router.post("/")
 def crear_pago (
     data : PagoCreate,
@@ -52,7 +52,7 @@ def crear_pagos_masivo(
     return nuevos_pagos
 
 # --- GET: OBTENER UN PAGO POR SU ID ---
-@router.get("/pago{id_pago}")
+@router.get("/{id_pago}")
 def obtener_transporte_id(id_pago: int, session: Session = Depends(get_db)):
     
     pago = session.get(Pago, id_pago)

@@ -1,0 +1,62 @@
+[
+  {
+    "nombre": "Carlos Ruiz",
+    "experiencia": 12,
+    "idiomas": "Español, Inglés, Francés",
+    "telefono": "+58-412-1112233"
+  },
+  {
+    "nombre": "Ana Milán",
+    "experiencia": 5,
+    "idiomas": "Español, Italiano",
+    "telefono": "+58-424-9998877"
+  },
+  {
+    "nombre": "Diego Páez",
+    "experiencia": 8,
+    "idiomas": "Español, Alemán",
+    "telefono": "+58-274-5554433"
+  },
+  {
+    "nombre": "Sofia Valeri",
+    "experiencia": 3,
+    "idiomas": "Español, Inglés, Portugués",
+    "telefono": "+58-414-3332211"
+  },
+  {
+    "nombre": "Kenai Tepuy",
+    "experiencia": 15,
+    "idiomas": "Español, Pemón, Inglés",
+    "telefono": "+58-416-7776655"
+  },
+  {
+    "nombre": "Elena Márquez",
+    "experiencia": 7,
+    "idiomas": "Español, Inglés, Ruso",
+    "telefono": "+58-412-5550011"
+  },
+  {
+    "nombre": "Ricardo Méndez",
+    "experiencia": 10,
+    "idiomas": "Español, Holandés",
+    "telefono": "+58-424-2223344"
+  },
+  {
+    "nombre": "Valeria Castillo",
+    "experiencia": 4,
+    "idiomas": "Español, Inglés, Chino Mandarín",
+    "telefono": "+58-414-8887766"
+  },
+  {
+    "nombre": "Luis Granados",
+    "experiencia": 20,
+    "idiomas": "Español, Inglés, Japonés",
+    "telefono": "+58-276-4445566"
+  },
+  {
+    "nombre": "Marina Silva",
+    "experiencia": 6,
+    "idiomas": "Español, Portugués, Francés",
+    "telefono": "+58-416-1119988"
+  }
+]

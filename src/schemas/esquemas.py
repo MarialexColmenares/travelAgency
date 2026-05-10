@@ -9,7 +9,6 @@ class CreateDestino(BaseModel):
     descripcion: str
     clima: str
     observaciones: Optional[str] = None
-    estado: bool 
 class UpdateDestino(CreateDestino):
     pass   
 class UpdateDestinoParcial(BaseModel):

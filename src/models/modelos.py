@@ -14,8 +14,8 @@ class Destino(SQLModel, table=True):
     descripcion: str
     clima: str
     observaciones: Optional[str] = None
-    estado: bool
-    
+    estado: bool = Field(default=True)
+
     hoteles: List["Hotel"] = Relationship(back_populates="destino")
     paquetes: List["PaqueteTuristico"] = Relationship(back_populates="destinos", link_model=PaqueteDestinoLink)
 
@@ -25,7 +25,7 @@ class Guia(SQLModel, table=True):
     idiomas: str
     experiencia: int
     telefono: str
-    estado: str = Field(default="Disponible")  # Ejemplo: "Disponible", "En viaje", "Inactivo"
+    estado: str = Field(default="Disponible")  # "Disponible", "En viaje", "Inactivo"
 
     paquetes: List["PaqueteTuristico"] = Relationship(back_populates="guia")
     
@@ -34,8 +34,8 @@ class Transporte(SQLModel, table=True):
     tipo: str  # Bus, Avión, etc.
     empresa: str
     capacidad: int
-    estado: str = Field(default="Activo") # Ejemplo: "Fuera de Servicio", "Inactivo"
-    
+    estado: str = Field(default="Activo") #  "Fuera de Servicio", "Inactivo"
+
     paquetes: List["PaqueteTuristico"] = Relationship(back_populates="transporte")
     
 class Hotel(SQLModel, table=True):
@@ -46,7 +46,7 @@ class Hotel(SQLModel, table=True):
     contacto: str
     destino_id: Optional[int] = Field(default=None, foreign_key="destino.id")
     estado: bool = Field(default=True)
-    
+
     paquetes: List["PaqueteTuristico"] = Relationship(back_populates="hotel")
     destino: Optional["Destino"] = Relationship(back_populates="hoteles")
 
@@ -57,20 +57,16 @@ class PaqueteTuristico(SQLModel, table=True):
     duracion: str
     precio: float
     cupo: int
-    estado: str = Field(default="Disponible")  # agotado, disponible, inactivo
+    estado: str = Field(default="Disponible")  # Agotado, Disponible, Inactivo
 
-    # Claves Foráneas (Conexión con servicios)
     guia_id: Optional[int] = Field(default=None, foreign_key="guia.id")
     transporte_id: Optional[int] = Field(default=None, foreign_key="transporte.id")
     hotel_id: Optional[int] = Field(default=None, foreign_key="hotel.id")
 
-    # Relaciones para acceder a los datos fácilmente
     destinos: List[Destino] = Relationship(back_populates="paquetes", link_model=PaqueteDestinoLink)
     reservas: List["Reserva"] = Relationship(back_populates="paquete")
     guia: Optional[Guia] = Relationship(back_populates="paquetes")
-    # Esta línea estaba mal (decía back_populates="transporte")
     transporte: Optional[Transporte] = Relationship(back_populates="paquetes")
-    # Esta línea también estaba mal (decía back_populates="hotel")
     hotel: Optional[Hotel] = Relationship(back_populates="paquetes")
 
 class Cliente(SQLModel, table=True):
@@ -91,11 +87,9 @@ class Reserva(SQLModel, table=True):
     monto_total: float
     comentarios: Optional[str] = None
 
-    # Claves foráneas
     cliente_id: int = Field(foreign_key="cliente.id")
     paquete_id: int = Field(foreign_key="paqueteturistico.id")
 
-    # Relaciones
     cliente: Cliente = Relationship(back_populates="reservas")
     paquete: PaqueteTuristico = Relationship(back_populates="reservas")
     pagos: List["Pago"] = Relationship(back_populates="reserva")

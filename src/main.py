@@ -17,7 +17,7 @@ def on_startup():
 
 @app.get("/")
 def inicio():
-    return {"message":"Agencia de viajes"}
+    return {"message":"Bienvenido al Sistemena De Agencia de viajes"}
 
 app.include_router(destinos_router)
 app.include_router(guias_router)

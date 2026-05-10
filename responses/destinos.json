@@ -1,0 +1,73 @@
+
+[
+  {
+    "ciudad": "París",
+    "pais": "Francia",
+    "descripcion": "La capital del arte y la moda, famosa por la Torre Eiffel y el Museo del Louvre.",
+    "clima": "Templado",
+    "observaciones": "Ideal para viajes románticos y culturales."
+  },
+  {
+    "ciudad": "Tokio",
+    "pais": "Japón",
+    "descripcion": "Una metrópolis que mezcla rascacielos futuristas con templos históricos.",
+    "clima": "Oceánico",
+    "observaciones": "Excelente sistema de transporte público."
+  },
+  {
+    "ciudad": "Canaima",
+    "pais": "Venezuela",
+    "descripcion": "Hogar del Salto Ángel, la caída de agua más alta del mundo.",
+    "clima": "Tropical",
+    "observaciones": "Requiere traslado en avioneta; destino de aventura."
+  },
+  {
+    "ciudad": "Roma",
+    "pais": "Italia",
+    "descripcion": "Ciudad histórica conocida como la cuna de la civilización occidental.",
+    "clima": "Mediterráneo",
+    "observaciones": "Muchos sitios arqueológicos al aire libre."
+  },
+  {
+    "ciudad": "Reikiavik",
+    "pais": "Islandia",
+    "descripcion": "Famosa por sus paisajes volcánicos, termas geotérmicas y auroras boreales.",
+    "clima": "Subpolar",
+    "observaciones": "Costos de vida elevados pero paisajes únicos."
+  },
+  {
+    "ciudad": "Cartagena",
+    "pais": "Colombia",
+    "descripcion": "Ciudad amurallada a orillas del mar Caribe con arquitectura colonial.",
+    "clima": "Cálido",
+    "observaciones": "Muy concurrida en temporadas de vacaciones."
+  },
+  {
+    "ciudad": "Nueva York",
+    "pais": "Estados Unidos",
+    "descripcion": "Centro global de finanzas, cultura y entretenimiento.",
+    "clima": "Continental",
+    "observaciones": "Conocida como la ciudad que nunca duerme."
+  },
+  {
+    "ciudad": "Barcelona",
+    "pais": "España",
+    "descripcion": "Ciudad costera famosa por las obras de Gaudí y su vibrante vida urbana.",
+    "clima": "Mediterráneo",
+    "observaciones": "Gran oferta gastronómica y de playas."
+  },
+  {
+    "ciudad": "El Cairo",
+    "pais": "Egipto",
+    "descripcion": "Puerta de entrada a las Grandes Pirámides de Giza y el río Nilo.",
+    "clima": "Desértico",
+    "observaciones": "Clima extremadamente caluroso en verano."
+  },
+  {
+    "ciudad": "Sídney",
+    "pais": "Australia",
+    "descripcion": "Conocida por su emblemática Casa de la Ópera y hermosas bahías.",
+    "clima": "Subtropical",
+    "observaciones": "Ideal para actividades acuáticas y surf."
+  }
+]

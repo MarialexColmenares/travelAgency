@@ -1,0 +1,92 @@
+[
+  {
+    "fecha": "2026-05-15",
+    "cantidad_personas": 2,
+    "estado": "Confirmada",
+    "monto_total": 500.0,
+    "comentarios": "Cliente solicita habitación matrimonial",
+    "cliente_id": 1,
+    "paquete_id": 11
+  },
+  {
+    "fecha": "2026-05-16",
+    "cantidad_personas": 4,
+    "estado": "Pendiente",
+    "monto_total": 1800.0,
+    "comentarios": "Grupo familiar, requieren transporte adicional",
+    "cliente_id": 2,
+    "paquete_id": 5
+  },
+  {
+    "fecha": "2026-05-18",
+    "cantidad_personas": 1,
+    "estado": "Confirmada",
+    "monto_total": 890.0,
+    "comentarios": "Viajero individual para expedición Canaima",
+    "cliente_id": 3,
+    "paquete_id": 3
+  },
+  {
+    "fecha": "2026-05-20",
+    "cantidad_personas": 2,
+    "estado": "Cancelada",
+    "monto_total": 240.0,
+    "comentarios": "Cancelación por motivos de salud",
+    "cliente_id": 4,
+    "paquete_id": 4
+  },
+  {
+    "fecha": "2026-05-22",
+    "cantidad_personas": 3,
+    "estado": "Confirmada",
+    "monto_total": 750.0,
+    "comentarios": "Incluir guía bilingüe",
+    "cliente_id": 5,
+    "paquete_id": 8
+  },
+  {
+    "fecha": "2026-05-25",
+    "cantidad_personas": 2,
+    "estado": "Pendiente",
+    "monto_total": 900.0,
+    "comentarios": "Pendiente por confirmar pago de abono",
+    "cliente_id": 6,
+    "paquete_id": 6
+  },
+  {
+    "fecha": "2026-05-28",
+    "cantidad_personas": 5,
+    "estado": "Confirmada",
+    "monto_total": 600.0,
+    "comentarios": "Excursión escolar a la Colonia Tovar",
+    "cliente_id": 7,
+    "paquete_id": 4
+  },
+  {
+    "fecha": "2026-06-01",
+    "cantidad_personas": 2,
+    "estado": "Confirmada",
+    "monto_total": 1780.0,
+    "comentarios": "Luna de miel",
+    "cliente_id": 8,
+    "paquete_id": 3
+  },
+  {
+    "fecha": "2026-06-05",
+    "cantidad_personas": 1,
+    "estado": "Pendiente",
+    "monto_total": 250.0,
+    "comentarios": "Interesado en tour de montaña",
+    "cliente_id": 9,
+    "paquete_id": 12
+  },
+  {
+    "fecha": "2026-06-10",
+    "cantidad_personas": 4,
+    "estado": "Confirmada",
+    "monto_total": 1280.0,
+    "comentarios": "Reserva grupal para rafting en Barinas",
+    "cliente_id": 10,
+    "paquete_id": 5
+  }
+]
