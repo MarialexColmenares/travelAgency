@@ -1,8 +1,8 @@
-from modelos.models import Pago
+from models.modelos import Pago
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from database.conexion import get_db
-from esquemas.schemas import PagoCreate, PagoUpdate
+from schemas.esquemas import PagoCreate, PagoUpdate, PagoUpdateParcial
 
 router = APIRouter(prefix="/pagos",tags=["Pagos"])
 
@@ -11,20 +11,15 @@ router = APIRouter(prefix="/pagos",tags=["Pagos"])
 def mostrar_pago(session : Session = Depends(get_db) ):
 
     statement = select(Pago)
-    pago = session.exec(statement).all()
+    pagos = session.exec(statement).all()
 
-    return pago
+    if not pagos:
+        raise HTTPException(
+            status_code=404,
+            detail="No se Encontraron Registros de Pagos"
+        )
 
-# --- GET: OBTENER UN PAGO POR SU ID ---
-@router.get("/pago{id_pago}")
-def obtener_transporte_id(id_pago: int, session: Session = Depends(get_db)):
-    pago = session.get(Pago, id_pago)
-
-    if not pago:
-
-        raise HTTPException(status_code=404, detail="Pago not found")
-
-    return pago
+    return pagos
 
 # --- POST: CREAR UN VUEVO PAGO---
 @router.post("/")
@@ -46,7 +41,6 @@ def crear_pagos_masivo(
     lista_data: list[PagoCreate],
     session: Session = Depends(get_db)
 ):
-
     nuevos_pagos = [Pago(**pago.model_dump()) for pago in lista_data]
 
     session.add_all(nuevos_pagos)
@@ -57,11 +51,22 @@ def crear_pagos_masivo(
 
     return nuevos_pagos
 
+# --- GET: OBTENER UN PAGO POR SU ID ---
+@router.get("/pago{id_pago}")
+def obtener_transporte_id(id_pago: int, session: Session = Depends(get_db)):
+    
+    pago = session.get(Pago, id_pago)
+
+    if not pago:
+        raise HTTPException(status_code=404, detail="Pago not found")
+
+    return pago
+
 # --- PATCH: ACTUALIZACION PARCIAL ---
 @router.patch("/{id_pago}")
 def actualizar_pago_parcial(
     id_pago: int,
-    data: PagoUpdate,
+    data: PagoUpdateParcial,
     session: Session = Depends(get_db)
 ):
     db_pago = session.get(Pago, id_pago)
@@ -80,4 +85,27 @@ def actualizar_pago_parcial(
 
     return db_pago
 
+# --- PUT: ACTUALIZACIÓN TOTAL ---
+@router.put("/{id_pago}")
+def actualizacion_completa(
+    id_pago: int,
+    data: PagoUpdate,
+    session: Session = Depends(get_db)
+):
+    db_pago = session.get(Pago, id_pago)
+    if not db_pago:
+        raise HTTPException(
+            status_code=404, 
+            detail="Pago no Encontrado"
+        )
 
+    datos_nuevos = data.model_dump(exclude_unset=True)
+
+    for llave, valor in datos_nuevos.items():
+        setattr(db_pago, llave, valor)
+
+    session.add(db_pago)
+    session.commit()
+    session.refresh(db_pago)
+
+    return db_pago

@@ -1,5 +1,5 @@
 import psycopg2
-from modelos.models import *
+from models.modelos import *
 from sqlmodel import SQLModel, create_engine, Session
 from database.datos import dbUrl
 

@@ -34,9 +34,6 @@ Basado en una arquitectura modular para facilitar la escalabilidad:
 ├── requirements.txt    # Dependencias del proyecto
 └── readme.md           # Documentación
 
-
-
-
 ```
 
 ## 🛠️ Stack Tecnológico
@@ -65,7 +62,7 @@ El sistema se divide en cuatro capas lógicas según los modelos implementados:
 
 ```
 Bash
-git clone [https://github.com/TU_USUARIO/TU_REPOSITORIO.git](https://github.com/TU_USUARIO/TU_REPOSITORIO.git)
+git clone (https://github.com/MarialexColmenares/travelAgency)
 cd TRAVELAGENCY
 ```
 
@@ -87,11 +84,12 @@ Bash
 pip install -r ../requirements.txt
 ```
 
--Configurar la Base de Datos
+- Configurar la Base de Datos
 
-´´´Python
+```
+Python
 dbUrl = "postgresql://usuario:password@localhost:5432/nombre_db"
-´´´
+```
 
 - Ejecutar la aplicación:
 

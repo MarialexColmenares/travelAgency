@@ -6,10 +6,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# ejemplos de json 
 responses/
 
-Lista_de_Cotejo_CRUD_FastAPI_PostgreSQL.pdf
-
+#  pdfs
 *.pdf
 
+# datos para la conexcion con postgre
 datos.py
