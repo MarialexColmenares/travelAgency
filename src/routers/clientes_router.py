@@ -111,7 +111,6 @@ def mostrar_reservas_de_cliente(
 
     return reservas
 
-
 # --- GET: RESUMEN DE VIAJERO ---
 @router.get("/{cliente_id}/resumen")
 def obtener_resumen_viajero(
@@ -225,17 +224,9 @@ def activar_cliente(
     db_cliente = session.get(Cliente, id_cliente)
     
     if not db_cliente:
-        raise HTTPException(
-            status_code=404, 
-            detail="Cliente no encontrado"
-        )
-    
+        raise HTTPException( status_code=404, detail="Cliente no encontrado")
     if db_cliente.is_active:
-        raise HTTPException(
-            status_code=400,
-            detail=f"El Cliente {db_cliente.nombre} ya se encuentra activo"
-        )
-        
+        raise HTTPException( status_code=400, detail=f"El Cliente {db_cliente.nombre} ya se encuentra activo") 
     db_cliente.is_active = True
     
     session.add(db_cliente)

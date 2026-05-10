@@ -227,7 +227,7 @@ def actualizacion_completa(
 
 # --- DELETE: ELIMINACION LOGICA ---
 @router.delete("/{id_guia}")
-def eliminar_guia(
+def desactivar_guia(
     id_guia: int,
     session: Session = Depends(get_db)
 ):
@@ -246,4 +246,27 @@ def eliminar_guia(
     session.refresh(db_guia)
 
     return db_guia
+
+# --- PATCH: RE-ACTIVACION ---
+@router.patch("/{id_guia}/activar")
+def activar_cliente(
+    id_guia: int,
+    session: Session = Depends(get_db)
+):
+    db_guia = session.get(Guia, id_guia)
+    
+    if not id_guia:
+        raise HTTPException(status_code=404, detail="Guia no encontrado")
+    if db_guia.estado == "Disponible":
+        raise HTTPException(status_code=400, detail=f"El Guia {db_guia.nombre} ya se Encuentra Activo")
+    if db_guia.estado == "En Viaje":
+        raise HTTPException(status_code=400, detail=f"El Guia {db_guia.nombre} Se Encuentra Guiando Un Paquete")
+    
+    db_guia.estado = "Disponible"
+    
+    session.add(db_guia)
+    session.commit()
+    session.refresh(db_guia)
+    
+    return {"message": f"El Guia {db_guia.nombre} ha Sido Reactivado con Exito"}
 

@@ -18,14 +18,14 @@ def mostrar_pago(session : Session = Depends(get_db) ):
             status_code=404,
             detail="No se Encontraron Registros de Pagos"
         )
-
     return pagos
 
 # --- POST: CREAR UN NUEVO PAGO---
 @router.post("/")
 def crear_pago (
     data : PagoCreate,
-    session : Session = Depends(get_db) ):
+    session : Session = Depends(get_db)
+):
     nuevo_pago = Pago(
         **data.model_dump()
     )
@@ -56,7 +56,7 @@ def crear_pagos_masivo(
 def obtener_transporte_id(id_pago: int, session: Session = Depends(get_db)):
     
     pago = session.get(Pago, id_pago)
-
+    
     if not pago:
         raise HTTPException(status_code=404, detail="Pago not found")
 
@@ -98,7 +98,6 @@ def actualizacion_completa(
             status_code=404, 
             detail="Pago no Encontrado"
         )
-
     datos_nuevos = data.model_dump(exclude_unset=True)
 
     for llave, valor in datos_nuevos.items():

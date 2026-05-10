@@ -62,7 +62,6 @@ def filtros(
     ciudad: Optional[str],
     session: Session = Depends(get_db)
 ):
-
     if nombre:
         statement = select(Hotel).where(Hotel.nombre.ilike(f"%{nombre}%"))
     if estrellas:
@@ -77,7 +76,6 @@ def filtros(
             status_code=404, 
             detail="No se Encontraron hoteles"               
         )
-
     return hoteles
 
 # --- GET: OBTENER UN HOTEL POR SU ID ---
@@ -146,7 +144,7 @@ def actualizacion_completa(
     return db_hotel
 
 # --- DELETE: ELIMINACION LOGICA ---
-@router.delete("/{id_destino}")
+@router.delete("/{id_hotel}")
 def eliminar_hotel(
     id: int,
     session: Session = Depends(get_db)
@@ -154,12 +152,35 @@ def eliminar_hotel(
     db_hotel= session.get(Hotel, id)
     
     if not db_hotel:
-        raise HTTPException(status_code=404, detail="Destino no encontrado")
-    
+        raise HTTPException(
+            status_code=404, 
+            detail="Hotel no Encontrado"
+        )
     db_hotel.estado = False
     
     session.add(db_hotel)
     session.commit()
     session.refresh(db_hotel)
     
-    return {"message": f"Destino con id {db_hotel} ha sido eliminado"}
+    return {"message": f"El Hotel {db_hotel.nombre} ha Sido Eliminado"}
+
+# --- PATCH: RE-ACTIVACION ---
+@router.patch("/{id_hotel}/activar")
+def activar_cliente(
+    id_hotel: int,
+    session: Session = Depends(get_db)
+):
+    db_hotel = session.get(Hotel, id_hotel)
+    
+    if not id_hotel:
+        raise HTTPException(status_code=404, detail="Hotel no encontrado")
+    if db_hotel.estado == True:
+        raise HTTPException(status_code=400, detail=f"El Hotel {db_hotel.nombre} Se ya se Encuentra Activo")
+    
+    db_hotel.estado = True
+    
+    session.add(db_hotel)
+    session.commit()
+    session.refresh(db_hotel)
+    
+    return {"message": f"El Hotel {db_hotel.nombre} ha Sido Reactivado con Exito"}

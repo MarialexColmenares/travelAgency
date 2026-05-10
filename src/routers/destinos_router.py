@@ -209,3 +209,29 @@ def eliminar_destino(
     session.refresh(db_destino)
     
     return {"message": f"Destino {db_destino.ciudad} ha sido eliminado"}
+
+# --- PATCH: RE-ACTIVACION ---
+@router.patch("/{id_destino}/activar")
+def activar_cliente(
+    id_destino: int,
+    session: Session = Depends(get_db)
+):
+    db_destino = session.get(Destino, id_destino)
+    
+    if not id_destino:
+        raise HTTPException(
+            status_code=404, 
+            detail="Destino no encontrado"
+        )
+    if db_destino.estado == True:
+        raise HTTPException(
+            status_code=400,
+            detail=f"El Destino {db_destino.ciudad} ya se encuentra activo"
+        )
+    db_destino.estado = True
+    
+    session.add(db_destino)
+    session.commit()
+    session.refresh(db_destino)
+    
+    return {"message": f"El Destino {db_destino.ciudad} ha sido Reactivado con Exito"}
