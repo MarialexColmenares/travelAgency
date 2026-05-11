@@ -14,7 +14,7 @@ Además de las operaciones CRUD básicas, el sistema incluye lógica de negocio 
   - Cálculo automático de **Saldo Pendiente** en reservas según los pagos realizados.
   - Verificación de **Disponibilidad de Cupos** en paquetes turísticos en tiempo real.
 - **Eliminación Lógica:** Los clientes no se borran físicamente, se gestionan mediante estados de actividad (`is_active`).
-- **Validación Estricta:** Uso de Pydantic para asegurar la integridad de los datos de entrada (ej. validación de correos con `EmailStr`).
+- **Validación Estricta:** Uso de Pydantic para asegurar la integridad de los datos de entrada (ej. validación de correos con `EmailStr`). y salida con (response_model=ClienteRead) 
 
 ---
 
