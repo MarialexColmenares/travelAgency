@@ -21,7 +21,6 @@ def mostrar_paquetes(
             status_code=404,
             detail="No se Encontraron Paquetes Turisticos"
         )
-
     return paquetes
 
 # --- POST: CREAR UN NUEVO PAQUETE ---
@@ -39,7 +38,6 @@ def crear_paquete_turistico_con_destinos(
     session.refresh(nuevo_paquete)
 
     return nuevo_paquete
-
 
 # --- POST BULK: CREAR MUCHOS NUEVOS PAQUETES---
 @router.post("/bulk")
@@ -107,21 +105,21 @@ def filtros(
 
 #--- DISPONIBILIDAD DE CUPOS EN UN PAQUETE  ---
 @router.get("/{id_paquete}/disponibilidad")
-def consultar_disponibilidad(paquete_id: int, session: Session = Depends(get_db)):
-    # 1. Buscamos el paquete
+def consultar_disponibilidad(
+    paquete_id: int, session: 
+    Session = Depends(get_db)
+):
     paquete = session.get(PaqueteTuristico, paquete_id)
     if not paquete:
         raise HTTPException(status_code=404, detail="Paquete no encontrado")
-
-    # 2. Lógica matemática
+    
     total_reservado = sum(
         reserva.cantidad_personas
         for reserva in paquete.reservas
         if reserva.estado != "Cancelada"
     )
     cupos_libres = paquete.cupo - total_reservado
-
-    # 3. Guardamos todo en una variable (diccionario)
+    
     reporte_disponibilidad = {
         "paquete": paquete.nombre,
         "cupo_total": paquete.cupo,
@@ -129,11 +127,7 @@ def consultar_disponibilidad(paquete_id: int, session: Session = Depends(get_db)
         "cupos_disponibles": max(0, cupos_libres),
         "estado": "Agotado" if cupos_libres <= 0 else "Disponible"
     }
-
-    # 4. Retornamos la variable
     return reporte_disponibilidad
-
-
 
 # --- GET: DETALLES DEL PAQUETE ---
 @router.get("/{id_paquete}/info-publica", response_model=PaqueteInfoCliente)
@@ -163,7 +157,6 @@ def obtener_info_detalles_paquete(
         ]
     )
     return resultado
-
 
 @router.get("/{id_paquete}/itinerario")
 def ver_destinos_del_paquete(
@@ -262,3 +255,25 @@ def desactivar_paquete(
     session.refresh(db_paquete)
 
     return {"mensaje": f"El paquete '{db_paquete.nombre}' ha sido desactivado exitosamente"}
+
+
+# --- PATCH: RE-ACTIVACION ---
+@router.patch("/{id_paquete}/activar")
+def activar_paquete(
+    id_paquete: int,
+    session: Session = Depends(get_db)
+):
+    db_paquete = session.get(PaqueteTuristico, id_paquete)
+    
+    if not id_paquete:
+        raise HTTPException(status_code=404, detail="Paquete no encontrado")
+    if db_paquete.estado == "Disponible":
+        raise HTTPException(status_code=400, detail=f"El Hotel {db_paquete.nombre} Se ya se Encuentra Disponible")
+    
+    db_paquete.estado = "Diasponible"
+    
+    session.add(db_paquete)
+    session.commit()
+    session.refresh(db_paquete)
+    
+    return {"message": f"El Paquete {db_paquete.nombre} ha Sido Reactivado con Exito"}

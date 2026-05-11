@@ -1,4 +1,4 @@
-from models.modelos import Pago
+from models.modelos import Pago, Reserva
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from database.conexion import get_db
@@ -20,15 +20,26 @@ def mostrar_pago(session : Session = Depends(get_db) ):
         )
     return pagos
 
-# --- POST: CREAR UN NUEVO PAGO---
+# --- POST: CREAR UN NUEVO PAGO ---
 @router.post("/")
-def crear_pago (
-    data : PagoCreate,
-    session : Session = Depends(get_db)
+def crear_pago(
+    data: PagoCreate,
+    session: Session = Depends(get_db)
 ):
-    nuevo_pago = Pago(
-        **data.model_dump()
-    )
+    reserva = session.get(Reserva, data.reserva_id)
+    
+    if not reserva:
+        raise HTTPException(
+            status_code=404, 
+            detail="La Reserva asociada no existe"
+        )
+    if reserva.estado == "Pagada":
+        raise HTTPException(
+            status_code=400,
+            detail=f"La Reserva del destino {reserva.paquete.nombre} ya ha sido Pagada."
+        )
+    nuevo_pago = Pago(**data.model_dump())
+    
     session.add(nuevo_pago)
     session.commit()
     session.refresh(nuevo_pago)
@@ -41,11 +52,26 @@ def crear_pagos_masivo(
     lista_data: list[PagoCreate],
     session: Session = Depends(get_db)
 ):
-    nuevos_pagos = [Pago(**pago.model_dump()) for pago in lista_data]
+    nuevos_pagos = []
+    
+    for data in lista_data:
+        reserva = session.get(Reserva, data.reserva_id)
+        if not reserva:
+            raise HTTPException(
+                status_code=404,  
+                detail=f"Reserva ID {data.reserva_id} no encontrada"
+            )
+        if reserva.estado == "Pagada":
+            raise HTTPException(
+                status_code=400,
+                detail=f" La Reserva ID {reserva.id} ya está Pagada."
+            )
+        pago= Pago(**data.model_dump())
+        nuevos_pagos.append(pago)
 
     session.add_all(nuevos_pagos)
     session.commit()
-
+    
     for pago in nuevos_pagos:
         session.refresh(pago)
 

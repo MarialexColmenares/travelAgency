@@ -22,8 +22,11 @@ def mostrar_reservas(
     return reservas
 
 # --- POST: CREAR UNA NUEVA RESERVA ---
-@router.post("/reservas/")
-def crear_reserva(reserva: Reserva, session: Session = Depends(get_db)):
+@router.post("/")
+def crear_reserva(
+    reserva: Reserva, session: 
+        Session = Depends(get_db)
+):
     paquete = session.get(PaqueteTuristico, reserva.paquete_id)
     
     if not paquete:
@@ -72,29 +75,29 @@ def crear_reservas_masivo(
 
 # --- CONSULTAR SALDO PENDIENTE ---
 @router.get("/{id_reserva}/saldo")
-def consultar_saldo_reserva(
-    id_reserva: int, 
-    session: Session = Depends(get_db)
-):
+def consultar_saldo_reserva(id_reserva: int, session: Session = Depends(get_db)):
     reserva = session.get(Reserva, id_reserva)
     
     if not reserva:
-        raise HTTPException(
-            status_code=404, 
-            detail="Reserva no encontrada"
-        )
-
+        raise HTTPException(status_code=404, detail="Reserva no encontrada")
+    
     total_pagado = sum(pago.monto for pago in reserva.pagos)
     saldo_pendiente = reserva.monto_total - total_pagado
+
+    if total_pagado >= reserva.monto_total:
+        reserva.estado = "Pagada"
+        session.add(reserva)
+        session.commit()
+        session.refresh(reserva)
+    
     estado_cuenta = {
         "cliente": reserva.cliente.nombre,
         "paquete": reserva.paquete.nombre,
         "monto_total_viaje": reserva.monto_total,
         "total_abonado": total_pagado,
         "saldo_restante": max(0, saldo_pendiente),
-        "estado_pago": "Liquidado" if saldo_pendiente <= 0 else "Pendiente"
+        "estado_pago": reserva.estado
     }
-
     return estado_cuenta
 
 # --- GET: OBTENER UNA RESERVA POR SU ID ---
@@ -108,7 +111,6 @@ def obtener_reserva_id(
             status_code=404,
             detail="Reserva no Encontrada"
         )
-
     return reserva
 
 # --- PATCH: ACTUALIZACION PARCIAL---
@@ -177,4 +179,3 @@ def cancelar_reserva(
     reserva.estado = "Cancelada"
     
     return reserva
-
