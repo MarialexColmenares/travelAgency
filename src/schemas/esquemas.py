@@ -20,7 +20,24 @@ class UpdateDestinoParcial(BaseModel):
 class DestinoSimple(BaseModel):
     ciudad: str
     pais: str
-    
+class DestinoRead(BaseModel):
+    id: int
+    ciudad: str
+    pais: str
+    descripcion: str
+    clima: str
+    observaciones: Optional[str] = None
+    estado: bool
+    class Config:
+        from_attributes = True 
+        
+class DestinoConPaquetes(BaseModel):
+    destino: str
+    pais: str
+    paquetes_asociados: List[str]
+    class Config:
+        from_attributes = True        
+
 # --- GUIAS ---
 class GuiaCreate(BaseModel):
     nombre: str
@@ -79,6 +96,14 @@ class HotelUpdateParcial(BaseModel):
     categoria: Optional[int] = None
     direccion: Optional[str] = None
     contacto: Optional[str] = None
+class HotelRead(BaseModel):
+    id: int
+    nombre: str
+    categoria: int
+    direccion: str
+    contacto: str
+    class Config:
+        from_attributes = True
 
 # --- PAQUETE TURÍSTICO ---
 class PaqueteBase(BaseModel):
@@ -103,13 +128,6 @@ class PaqueteUpdate(BaseModel):
     guia_id: Optional[int] = None
     transporte_id: Optional[int] = None
     hotel_id: Optional[int] = None
-class paqueteConTransportes(BaseModel):
-    
-    nombre: str
-    transporte: Optional[TransporteCreate] = None
-    class Config:
-        from_attributes = True
-
 class PaqueteInfoCliente(BaseModel):
     nombre: str
     descripcion: str

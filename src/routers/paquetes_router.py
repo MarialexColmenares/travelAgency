@@ -158,6 +158,7 @@ def obtener_info_detalles_paquete(
     )
     return resultado
 
+# --- GET: PAQUETE CON DESTINOS
 @router.get("/{id_paquete}/itinerario")
 def ver_destinos_del_paquete(
     id_paquete: int, 

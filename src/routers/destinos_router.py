@@ -2,14 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from database.conexion import get_db
 from models.modelos import Destino
-from schemas.esquemas import CreateDestino, UpdateDestino, UpdateDestinoParcial
+from schemas.esquemas import CreateDestino, UpdateDestino, UpdateDestinoParcial, DestinoRead, DestinoConPaquetes
 from typing import Optional, List
 
 router = APIRouter(prefix="/destinos", tags=["Destinos"])
 
 
 # --- POST: CREAR UN NUEVO DESTINO ---
-@router.post("/")
+@router.post("/", response_model=DestinoRead)
 def crear_destino(
     data : CreateDestino,
     session : Session = Depends(get_db)
@@ -25,7 +25,7 @@ def crear_destino(
     return nuevo_destino
 
 # --- POST BULK: CREAR MUCHOS NUEVOS DESTINOS ---
-@router.post("/bulk")
+@router.post("/bulk", response_model=List[DestinoRead])
 def crear_destinos_masivo(
     lista_data: List[CreateDestino],
     session: Session = Depends(get_db)
@@ -45,7 +45,7 @@ def crear_destinos_masivo(
     return nuevos_destinos
 
 # --- GET: OBTENER TODOS LOS DESTINOS ---
-@router.get("/")
+@router.get("/", response_model=List[DestinoRead])
 def mostrar_destinos(
     session : Session = Depends(get_db) 
 ):
@@ -61,7 +61,7 @@ def mostrar_destinos(
     return destinos
 
 # --- GET: OBTENER DESTINOS ACTIVOS ---
-@router.get("/activos")
+@router.get("/activos", response_model=List[DestinoRead] )
 def mostrar_destinos_activos(
     session: Session = Depends(get_db)
 ):
@@ -71,7 +71,7 @@ def mostrar_destinos_activos(
     return destinos
 
 # --- GET: FILTRAR DESTINOS ---
-@router.get("/filtros")
+@router.get("/filtros", response_model=List[DestinoRead])
 def filtros(
     ciudad: Optional[str] = None,
     pais: Optional[str] = None,
@@ -104,7 +104,7 @@ def filtros(
     return destinos_filtrados
 
 #  --- GET:OBTENER TODOS LOS DESTINOS CON SUS PAQUETES ASOCIADOS ---
-@router.get("/con-paquetes/")
+@router.get("/con-paquetes/", response_model=List[DestinoConPaquetes])
 def mostrar_destinos_con_paquetes(
     session: Session = Depends(get_db)
 ):
@@ -119,13 +119,10 @@ def mostrar_destinos_con_paquetes(
             "pais": destino.pais,
             "paquetes_asociados": [p.nombre for p in destino.paquetes]
         })
-        
-    session.commit()
-    
     return resultado
 
 # --- GET: OBTENER UN DESTINO POR ID ---
-@router.get("/{id_destino}")
+@router.get("/{id_destino}", response_model=DestinoRead)
 def mostrar_destino_id(
     id_destino: int,
     session: Session = Depends(get_db)
@@ -141,7 +138,7 @@ def mostrar_destino_id(
     return destino
 
 # --- PATCH: ACTUALIZACIÓN PARCIAL ---
-@router.patch("/{id_destino}")
+@router.patch("/{id_destino}", response_model=DestinoRead)
 def actualizar_destino_parcial(
     id_destino: int,
     data: UpdateDestinoParcial,
@@ -167,7 +164,7 @@ def actualizar_destino_parcial(
     return db_destino
 
 # --- PUT: ACTUALIZACIÓN TOTAL ---
-@router.put("/{id_destino}")
+@router.put("/{id_destino}", response_model=DestinoRead)
 def actualizacion_completa(
     id: int,
     data: UpdateDestino,
@@ -192,7 +189,7 @@ def actualizacion_completa(
     return db_destino
 
 # --- DELETE: ELIMINACION LOGICA ---
-@router.delete("/{id_destino}")
+@router.delete("/{id_destino}" )
 def eliminar_destino(
     id_destino: int,
     session: Session = Depends(get_db)
@@ -218,7 +215,7 @@ def activar_cliente(
 ):
     db_destino = session.get(Destino, id_destino)
     
-    if not id_destino:
+    if not db_destino:
         raise HTTPException(
             status_code=404, 
             detail="Destino no encontrado"

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from schemas.esquemas import ClienteCreate, clienteUpdate
 from sqlmodel import Session, select
 from database.conexion import get_db
-from models.modelos import Cliente, Guia, Reserva
+from models.modelos import Cliente, Reserva
 
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
